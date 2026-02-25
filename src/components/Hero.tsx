@@ -1,108 +1,57 @@
-import { useState } from 'react';
-import { useGender } from '@/contexts/GenderContext';
-import { Scissors } from 'lucide-react';
-import heroMale from '@/assets/hero-male.jpg';
-import heroFemale from '@/assets/hero-female.jpg';
+import { motion } from 'framer-motion';
+import heroImage from '@/assets/hero-unified.jpg';
 
 const Hero = () => {
-  const { gender, setGender } = useGender();
-  const [hovered, setHovered] = useState<'male' | 'female' | null>(null);
-
-  const getMaleFlex = () => {
-    if (gender === 'male') return 3;
-    if (gender === 'female') return 1;
-    if (hovered === 'male') return 2;
-    return 1;
-  };
-
-  const getFemaleFlex = () => {
-    if (gender === 'female') return 3;
-    if (gender === 'male') return 1;
-    if (hovered === 'female') return 2;
-    return 1;
-  };
-
-  const transition = 'flex 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-
   return (
-    <section className="flex flex-col md:flex-row h-[92vh] relative pt-16">
-      {/* Male Side */}
-      <div
-        className="relative overflow-hidden cursor-pointer min-h-0"
-        style={{ flex: getMaleFlex(), transition }}
-        onMouseEnter={() => !gender && setHovered('male')}
-        onMouseLeave={() => setHovered(null)}
-        onClick={() => setGender(gender === 'male' ? null : 'male')}
-      >
-        <div className="absolute inset-0">
-          <img src={heroMale} alt="" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/30" />
-          <div
-            className="absolute inset-0"
-            style={{ background: 'linear-gradient(135deg, rgba(200,169,110,0.12) 0%, transparent 60%)' }}
-          />
-        </div>
-
-        <div className="relative h-full flex flex-col items-center justify-center text-center px-6 z-10">
-          <div className="w-[2px] h-10 bg-male mb-6 opacity-70" />
-          <span className="text-male text-xs tracking-[0.3em] uppercase mb-3 font-body">♂</span>
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-light italic text-foreground mb-3">
-            Para Ele
-          </h2>
-          <p className="text-male text-sm md:text-base tracking-[0.15em] font-light mb-8">
-            Barba. Cabelo. Estilo.
-          </p>
-          <button
-            className="px-6 py-3 border border-male text-male rounded-lg text-sm tracking-wider hover:bg-male hover:text-background transition-all duration-300"
-            onClick={(e) => { e.stopPropagation(); setGender('male'); }}
-          >
-            Explorar serviços →
-          </button>
-        </div>
+    <section className="relative h-[85vh] md:h-[92vh] pt-16 overflow-hidden">
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <img src={heroImage} alt="GLAM - Beleza & Barbearia" className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/30 via-transparent to-background/30" />
       </div>
 
-      {/* Center Divider */}
-      {!gender && (
-        <div className="hidden md:flex w-px relative z-20 items-center justify-center bg-border/50">
-          <div className="absolute bg-background p-2 rounded-full">
-            <Scissors size={14} className="text-muted-foreground rotate-90" />
-          </div>
-        </div>
-      )}
+      {/* Content */}
+      <div className="relative h-full flex flex-col items-center justify-center text-center px-6 z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="max-w-3xl"
+        >
+          <div className="w-px h-12 bg-primary/50 mx-auto mb-8" />
 
-      {/* Female Side */}
-      <div
-        className="relative overflow-hidden cursor-pointer min-h-0"
-        style={{ flex: getFemaleFlex(), transition }}
-        onMouseEnter={() => !gender && setHovered('female')}
-        onMouseLeave={() => setHovered(null)}
-        onClick={() => setGender(gender === 'female' ? null : 'female')}
-      >
-        <div className="absolute inset-0">
-          <img src={heroFemale} alt="" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/30" />
-          <div
-            className="absolute inset-0"
-            style={{ background: 'linear-gradient(225deg, rgba(212,130,154,0.12) 0%, transparent 60%)' }}
-          />
-        </div>
-
-        <div className="relative h-full flex flex-col items-center justify-center text-center px-6 z-10">
-          <div className="w-[2px] h-10 bg-female mb-6 opacity-70" />
-          <span className="text-female text-xs tracking-[0.3em] uppercase mb-3 font-body">♀</span>
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-light italic text-foreground mb-3">
-            Para Ela
+          <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-light italic text-foreground mb-4 leading-[1.1]">
+            Beleza & Estilo
+          </h1>
+          <h2 className="font-display text-2xl md:text-3xl font-light text-foreground/70 mb-6">
+            em um só lugar
           </h2>
-          <p className="text-female text-sm md:text-base tracking-[0.15em] font-light mb-8">
-            Beleza. Cuidado. Arte.
+
+          <p className="font-body text-sm md:text-base text-muted-foreground max-w-xl mx-auto mb-4 leading-relaxed tracking-wide">
+            Agende serviços de barbearia e salão de beleza com os melhores profissionais da cidade. 
+            Para ele e para ela — tudo em uma plataforma única.
           </p>
-          <button
-            className="px-6 py-3 border border-female text-female rounded-lg text-sm tracking-wider hover:bg-female hover:text-background transition-all duration-300"
-            onClick={(e) => { e.stopPropagation(); setGender('female'); }}
-          >
-            Explorar serviços →
-          </button>
-        </div>
+
+          <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground/60 tracking-[0.2em] uppercase font-body mt-8">
+            <span>Barba</span>
+            <span className="w-1 h-1 rounded-full bg-primary/40" />
+            <span>Cabelo</span>
+            <span className="w-1 h-1 rounded-full bg-primary/40" />
+            <span>Estética</span>
+            <span className="w-1 h-1 rounded-full bg-primary/40" />
+            <span>Beleza</span>
+          </div>
+        </motion.div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          className="absolute bottom-8"
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <div className="w-px h-8 bg-gradient-to-b from-primary/50 to-transparent" />
+        </motion.div>
       </div>
     </section>
   );
