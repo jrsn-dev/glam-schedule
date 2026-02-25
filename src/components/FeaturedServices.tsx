@@ -34,11 +34,10 @@ const services: Service[] = [
 ];
 
 const FeaturedServices = () => {
-  const { gender } = useGender();
+  const { gender, setGender } = useGender();
 
-  const filtered = gender
-    ? services.filter((s) => s.gender === gender)
-    : services.filter((_, i) => i < 8);
+  const activeGender = gender || 'male';
+  const filtered = services.filter((s) => s.gender === activeGender);
 
   return (
     <section className="py-20 px-4" id="servicos">
@@ -49,6 +48,32 @@ const FeaturedServices = () => {
             <div className="flex-1 h-px bg-border" />
           </div>
           <h2 className="glam-section-title">Escolha o que você precisa</h2>
+        </div>
+
+        {/* Gender Switch */}
+        <div className="flex items-center justify-center mb-10">
+          <div className="inline-flex items-center rounded-full border border-border bg-card p-1 gap-1">
+            <button
+              onClick={() => setGender('male')}
+              className={`px-6 py-2.5 rounded-full text-sm font-body font-medium tracking-wide transition-all duration-300 ${
+                activeGender === 'male'
+                  ? 'bg-male text-background shadow-md'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Para Eles
+            </button>
+            <button
+              onClick={() => setGender('female')}
+              className={`px-6 py-2.5 rounded-full text-sm font-body font-medium tracking-wide transition-all duration-300 ${
+                activeGender === 'female'
+                  ? 'bg-female text-background shadow-md'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Para Elas
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
@@ -66,7 +91,7 @@ const FeaturedServices = () => {
                 transition={{ delay: i * 0.04, duration: 0.4 }}
               >
                 {service.isPopular && (
-                  <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-primary text-primary-foreground text-[10px] font-medium tracking-wider">
+                  <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-primary text-primary-foreground text-[10px] font-medium tracking-wider font-body">
                     Mais pedido
                   </span>
                 )}
@@ -80,21 +105,21 @@ const FeaturedServices = () => {
                 </div>
 
                 <h3 className="font-display text-xl mb-1">{service.name}</h3>
-                <p className="text-[13px] text-muted-foreground mb-4 line-clamp-2">
+                <p className="text-[13px] text-muted-foreground mb-4 line-clamp-2 font-body">
                   {service.description}
                 </p>
 
                 <div className="flex items-center justify-between mb-5">
-                  <span className="text-sm text-primary font-medium">
+                  <span className="text-sm text-primary font-medium font-body">
                     a partir de R$ {service.priceFrom}
                   </span>
-                  <span className="text-xs text-muted-foreground bg-elevated px-2.5 py-1 rounded-full flex items-center gap-1">
+                  <span className="text-xs text-muted-foreground bg-elevated px-2.5 py-1 rounded-full flex items-center gap-1 font-body">
                     <Clock size={10} />
                     {service.duration} min
                   </span>
                 </div>
 
-                <button className="w-full py-2.5 rounded-lg border border-primary/60 text-primary text-sm hover:bg-primary hover:text-primary-foreground transition-all duration-200">
+                <button className="w-full py-2.5 rounded-lg border border-primary/60 text-primary text-sm hover:bg-primary hover:text-primary-foreground transition-all duration-200 font-body">
                   Agendar
                 </button>
               </motion.div>
