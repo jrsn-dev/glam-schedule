@@ -1,38 +1,60 @@
 import { motion } from 'framer-motion';
+import { Scissors, User, CalendarCheck } from 'lucide-react';
 
 const steps = [
-  { num: '01', title: 'Escolha o serviço', desc: 'Filtre por gênero e especialidade para encontrar exatamente o que precisa.' },
-  { num: '02', title: 'Selecione o horário', desc: 'Veja a agenda disponível do profissional e escolha o melhor momento.' },
-  { num: '03', title: 'Confirme e aguarde', desc: 'Receba confirmação instantânea e lembrete por WhatsApp.' },
+  {
+    num: 1,
+    icon: Scissors,
+    title: 'Escolha o Serviço',
+    desc: 'Selecione entre cortes, barba, tratamentos e muito mais.'
+  },
+  {
+    num: 2,
+    icon: User,
+    title: 'Escolha o Profissional',
+    desc: 'Agende com seu barbeiro ou estilista favorito.'
+  },
+  {
+    num: 3,
+    icon: CalendarCheck,
+    title: 'Confirme o Horário',
+    desc: 'Escolha a data e horário que melhor se adequa a você.'
+  },
 ];
 
 const HowItWorks = () => (
-  <section className="py-20 px-4">
-    <div className="max-w-5xl mx-auto">
-      <div className="text-center mb-16">
-        <span className="glam-section-label">COMO FUNCIONA</span>
-        <h2 className="glam-section-title mt-3">Simples, rápido e elegante</h2>
+  <section className="py-24 px-6">
+    <div className="max-w-6xl mx-auto">
+      <div className="text-center mb-20">
+        <span className="text-primary text-[10px] font-bold tracking-[0.5em] uppercase block mb-4">SIMPLES E RÁPIDO</span>
+        <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tighter">Como Funciona</h2>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4 relative">
         {steps.map((step, i) => (
           <motion.div
             key={step.num}
-            className="relative text-center"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: i * 0.15, duration: 0.5 }}
+            transition={{ delay: i * 0.2, duration: 0.8 }}
+            className="glam-card group p-10 text-center flex flex-col items-center border border-white/5 bg-secondary/20"
           >
-            <span className="font-display text-7xl font-light text-primary/10 block mb-2">
-              {step.num}
-            </span>
-            <h3 className="text-base font-medium mb-2 font-body">{step.title}</h3>
-            <p className="text-sm text-dim leading-relaxed">{step.desc}</p>
+            <div className="relative mb-8">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-background border border-primary text-primary text-[10px] items-center justify-center flex font-bold shadow-glow z-20">
+                {step.num}
+              </div>
+              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 group-hover:bg-primary group-hover:text-black transition-all duration-500 shadow-glow">
+                <step.icon size={28} />
+              </div>
+            </div>
 
-            {i < 2 && (
-              <div className="hidden md:block absolute top-10 -right-4 w-8 border-t border-dashed border-border" />
-            )}
+            <h3 className="text-xl font-bold mb-4 text-white font-display tracking-tight leading-tight">
+              {step.title}
+            </h3>
+            <p className="text-muted-foreground text-sm leading-relaxed max-w-[240px] font-light">
+              {step.desc}
+            </p>
           </motion.div>
         ))}
       </div>

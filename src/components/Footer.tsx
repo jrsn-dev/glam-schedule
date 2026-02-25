@@ -2,64 +2,31 @@ import { Link } from 'react-router-dom';
 import { Instagram, MessageCircle } from 'lucide-react';
 
 const Footer = () => (
-  <footer className="border-t border-border py-16 px-4 bg-background">
-    <div className="max-w-7xl mx-auto">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
-        <div>
-          <span className="font-display text-2xl tracking-[0.1em] text-foreground">GLAM</span>
-          <p className="mt-3 text-sm text-dim leading-relaxed">
-            Agendamento de serviços de beleza com elegância e praticidade.
-          </p>
-        </div>
-        <div>
-          <h4 className="text-xs tracking-[0.15em] uppercase text-muted-foreground mb-4 font-body">
-            Masculino
-          </h4>
-          <ul className="space-y-2.5">
-            <li><Link to="/" className="text-sm text-dim hover:text-primary transition-colors">Corte</Link></li>
-            <li><Link to="/" className="text-sm text-dim hover:text-primary transition-colors">Barba</Link></li>
-            <li><Link to="/" className="text-sm text-dim hover:text-primary transition-colors">Hidratação</Link></li>
-          </ul>
-        </div>
-        <div>
-          <h4 className="text-xs tracking-[0.15em] uppercase text-muted-foreground mb-4 font-body">
-            Feminino
-          </h4>
-          <ul className="space-y-2.5">
-            <li><Link to="/" className="text-sm text-dim hover:text-primary transition-colors">Cabelo</Link></li>
-            <li><Link to="/" className="text-sm text-dim hover:text-primary transition-colors">Sobrancelha</Link></li>
-            <li><Link to="/" className="text-sm text-dim hover:text-primary transition-colors">Unhas</Link></li>
-            <li><Link to="/" className="text-sm text-dim hover:text-primary transition-colors">Maquiagem</Link></li>
-          </ul>
-        </div>
-        <div>
-          <h4 className="text-xs tracking-[0.15em] uppercase text-muted-foreground mb-4 font-body">
-            Empresa
-          </h4>
-          <ul className="space-y-2.5">
-            <li><Link to="/" className="text-sm text-dim hover:text-primary transition-colors">Sobre nós</Link></li>
-            <li><Link to="/" className="text-sm text-dim hover:text-primary transition-colors">Seja parceiro</Link></li>
-            <li><Link to="/" className="text-sm text-dim hover:text-primary transition-colors">Contato</Link></li>
-          </ul>
-        </div>
+  <footer className="border-t border-white/5 py-12 px-6">
+    <div className="content-container flex flex-col md:flex-row items-center justify-between gap-8">
+      <div className="flex items-center gap-8">
+        <span className="font-display text-xl tracking-[0.2em] text-foreground font-bold">
+          GLAM<span className="text-primary tracking-normal">.</span>
+        </span>
+        <nav className="flex items-center gap-6">
+          <Link to="/" className="text-[10px] uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors">Home</Link>
+          <Link to="/agendar" className="text-[10px] uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors">Agendar</Link>
+          <Link to="/profissionais" className="text-[10px] uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors">Profissionais</Link>
+        </nav>
       </div>
 
-      <div className="border-t border-border pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <span className="text-xs text-muted-foreground">© 2025 GLAM · Todos os direitos reservados</span>
-        <div className="flex items-center gap-3">
-          <a
-            href="#"
-            className="w-9 h-9 rounded-full border border-border flex items-center justify-center text-dim hover:text-primary hover:border-primary transition-colors"
-          >
-            <Instagram size={16} />
+      <div className="flex items-center gap-8">
+        <div className="flex items-center gap-4">
+          <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+            <Instagram size={18} />
           </a>
-          <a
-            href="#"
-            className="w-9 h-9 rounded-full border border-border flex items-center justify-center text-dim hover:text-primary hover:border-primary transition-colors"
-          >
-            <MessageCircle size={16} />
+          <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+            <MessageCircle size={18} />
           </a>
         </div>
+        <span className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground/50 font-bold">
+          © 2025 GLAM EXPERIENCE · SMART BOOKING
+        </span>
       </div>
     </div>
   </footer>

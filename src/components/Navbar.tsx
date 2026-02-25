@@ -1,127 +1,119 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Sparkles, Scissors } from 'lucide-react';
 import { useGender } from '@/contexts/GenderContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = () => {
   const { gender, setGender } = useGender();
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 80);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-shadow duration-300 ${scrolled ? 'shadow-lg' : ''}`}
-      style={{
-        background: 'rgba(10, 10, 11, 0.85)',
-        backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(42, 42, 50, 0.5)',
-      }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${isScrolled
+        ? "py-4 bg-[#020202]/80 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
+        : "py-10 bg-transparent"
+        }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <Link to="/" className="font-display text-[22px] tracking-[0.15em] text-foreground">
-            GLAM
-          </Link>
+      <div className="content-container px-6 md:px-12 flex items-center justify-between">
+        <Link
+          to="/"
+          onClick={() => setGender(null)}
+          className="flex items-center gap-2 group relative z-50"
+        >
+          <span className="font-display text-3xl tracking-[0.3em] text-foreground font-bold group-hover:text-primary transition-all duration-500">
+            GLAM<span className="text-primary tracking-normal">.</span>
+          </span>
+        </Link>
 
-          <div className="hidden md:flex items-center gap-8">
-            <Link to="/" className="text-sm text-dim hover:text-primary transition-colors duration-200">
-              Início
-            </Link>
-            <Link to="/profissionais" className="text-sm text-dim hover:text-primary transition-colors duration-200">
-              Profissionais
-            </Link>
-            <a href="#sobre" className="text-sm text-dim hover:text-primary transition-colors duration-200">
-              Sobre
-            </a>
-
-            <div className="flex items-center gap-1 rounded-full border border-border p-1">
-              <button
-                onClick={() => setGender(gender === 'male' ? null : 'male')}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
-                  gender === 'male'
-                    ? 'bg-male text-background'
-                    : 'text-dim hover:text-foreground'
+        <div className="hidden md:flex items-center gap-12">
+          <div className="flex items-center gap-10">
+            <button
+              onClick={() => setGender('female')}
+              className={`flex items-center gap-2 text-[10px] uppercase tracking-[0.4em] font-bold transition-all duration-500 relative py-2 ${gender === 'female' ? 'text-pink-500' : 'text-muted-foreground hover:text-foreground opacity-60 hover:opacity-100'
                 }`}
-              >
-                ♂
-              </button>
-              <button
-                onClick={() => setGender(gender === 'female' ? null : 'female')}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
-                  gender === 'female'
-                    ? 'bg-female text-background'
-                    : 'text-dim hover:text-foreground'
+            >
+              <Sparkles size={14} className={gender === 'female' ? "animate-pulse" : ""} />
+              Para Elas
+              {gender === 'female' && (
+                <motion.div layoutId="nav-gender-indicator" className="absolute -bottom-1 left-0 right-0 h-0.5 bg-pink-500 shadow-[0_0_15px_rgba(236,72,153,0.5)]" />
+              )}
+            </button>
+
+            <button
+              onClick={() => setGender('male')}
+              className={`flex items-center gap-2 text-[10px] uppercase tracking-[0.4em] font-bold transition-all duration-500 relative py-2 ${gender === 'male' ? 'text-blue-400' : 'text-muted-foreground hover:text-foreground opacity-60 hover:opacity-100'
                 }`}
-              >
-                ♀
-              </button>
-            </div>
-
-            <Link
-              to="/profissionais"
-              className="px-5 py-2 rounded-full bg-primary text-primary-foreground text-sm font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
             >
-              Agendar →
-            </Link>
-          </div>
-
-          <div className="flex md:hidden items-center gap-3">
-            <Link
-              to="/profissionais"
-              className="px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-xs font-medium"
-            >
-              Agendar
-            </Link>
-            <button className="text-foreground" onClick={() => setMenuOpen(!menuOpen)}>
-              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+              <Scissors size={14} className={gender === 'male' ? "animate-bounce" : ""} />
+              Para Eles
+              {gender === 'male' && (
+                <motion.div layoutId="nav-gender-indicator" className="absolute -bottom-1 left-0 right-0 h-0.5 bg-blue-400 shadow-[0_0_15px_rgba(96,165,250,0.5)]" />
+              )}
             </button>
           </div>
+
+          <div className="flex items-center gap-6">
+            <Link
+              to="/login"
+              className="px-8 py-3.5 rounded-full bg-white text-[#020202] text-[10px] uppercase tracking-[0.3em] font-bold transition-all duration-500 hover:bg-[#f0f0f0] hover:scale-[1.05] shadow-glow-white"
+            >
+              Entrar
+            </Link>
+          </div>
+        </div>
+
+        <div className="flex md:hidden items-center gap-6">
+          <button
+            className="text-foreground p-2"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {menuOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
         </div>
       </div>
 
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden overflow-hidden border-t border-border"
-            style={{ background: 'rgba(10, 10, 11, 0.95)', backdropFilter: 'blur(20px)' }}
+            initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+            animate={{ opacity: 1, backdropFilter: 'blur(20px)' }}
+            exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+            className="fixed inset-0 z-40 bg-background/80 md:hidden flex items-center justify-center"
           >
-            <div className="px-4 py-6 space-y-4">
-              <Link to="/" className="block text-sm text-dim" onClick={() => setMenuOpen(false)}>
-                Início
+            <div className="text-center space-y-12 uppercase tracking-[0.5em] font-light text-sm">
+              <Link to="/" className="block text-2xl" onClick={() => setMenuOpen(false)}>Início</Link>
+              <Link to="/profissionais" className="block text-2xl" onClick={() => setMenuOpen(false)}>Profissionais</Link>
+              <Link
+                to="/login"
+                className="block w-full text-2xl uppercase tracking-[0.5em]"
+                onClick={() => setMenuOpen(false)}
+              >
+                Entrar
               </Link>
-              <Link to="/profissionais" className="block text-sm text-dim" onClick={() => setMenuOpen(false)}>
-                Profissionais
-              </Link>
-              <div className="flex gap-2 pt-2">
+              <div className="flex flex-col gap-8 pt-8 pt-12 border-t border-white/10">
                 <button
-                  onClick={() => { setGender(gender === 'male' ? null : 'male'); setMenuOpen(false); }}
-                  className={`flex-1 py-2 rounded-full text-sm border transition-all ${
-                    gender === 'male'
-                      ? 'bg-male text-background border-transparent'
-                      : 'border-border text-dim'
-                  }`}
+                  onClick={() => { setGender('female'); setMenuOpen(false); }}
+                  className={`flex items-center justify-center gap-4 tracking-[0.5em] ${gender === 'female' ? 'text-pink-500 font-bold' : 'text-muted-foreground'}`}
                 >
-                  ♂ Masculino
+                  <Sparkles size={20} />
+                  PARA ELAS
                 </button>
                 <button
-                  onClick={() => { setGender(gender === 'female' ? null : 'female'); setMenuOpen(false); }}
-                  className={`flex-1 py-2 rounded-full text-sm border transition-all ${
-                    gender === 'female'
-                      ? 'bg-female text-background border-transparent'
-                      : 'border-border text-dim'
-                  }`}
+                  onClick={() => { setGender('male'); setMenuOpen(false); }}
+                  className={`flex items-center justify-center gap-4 tracking-[0.5em] ${gender === 'male' ? 'text-blue-400 font-bold' : 'text-muted-foreground'}`}
                 >
-                  ♀ Feminino
+                  <Scissors size={20} />
+                  PARA ELES
                 </button>
               </div>
             </div>

@@ -1,57 +1,109 @@
-import { motion } from 'framer-motion';
-import heroImage from '@/assets/hero-unified.jpg';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { Scissors, User, Calendar, CheckCircle, ArrowRight } from 'lucide-react';
+import { useGender } from '@/contexts/GenderContext';
 
 const Hero = () => {
+  const { gender, setGender } = useGender();
+  const steps = [
+    { icon: Scissors, label: 'Serviço' },
+    { icon: User, label: 'Profissional' },
+    { icon: Calendar, label: 'Horário' },
+    { icon: CheckCircle, label: 'Pronto' },
+  ];
+
   return (
-    <section className="relative h-[85vh] md:h-[92vh] pt-16 overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute inset-0">
-        <img src={heroImage} alt="GLAM - Beleza & Barbearia" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/40" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/30 via-transparent to-background/30" />
+    <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+      {/* Dynamic Background Image based on Gender Selection */}
+      <AnimatePresence mode="wait">
+        {!gender ? (
+          <motion.div
+            key="dual-bg"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.25 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5 }}
+            className="absolute inset-0 z-0 flex w-full h-full"
+          >
+            <div className="relative flex-1 h-full overflow-hidden">
+              <img src="/src/assets/feme saloon.jpg" className="w-full h-full object-cover" alt="" />
+              {/* Left side soft fade */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#020202] via-transparent to-transparent opacity-80" />
+            </div>
+
+            {/* Absolute Centered Blend Layer */}
+            <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-64 z-10 bg-gradient-to-r from-transparent via-[#020202] to-transparent" />
+
+            <div className="relative flex-1 h-full overflow-hidden">
+              <img src="/src/assets/male saloon.jpg" className="w-full h-full object-cover" alt="" />
+              {/* Right side soft fade */}
+              <div className="absolute inset-0 bg-gradient-to-l from-[#020202] via-transparent to-transparent opacity-80" />
+            </div>
+            {/* General Bottom Fade */}
+            <div className="absolute inset-0 z-20 bg-gradient-to-b from-transparent via-[#020202]/20 to-[#020202]" />
+          </motion.div>
+        ) : (
+          <motion.div
+            key={gender}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.35 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5 }}
+            className="absolute inset-0 z-0 w-full h-full"
+          >
+            <img
+              src={gender === 'female' ? "/src/assets/feme saloon.jpg" : "/src/assets/male saloon.jpg"}
+              className="w-full h-full object-cover"
+              alt=""
+            />
+            {/* Smooth gradient fade to bottom */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#020202]/30 to-[#020202]" />
+            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#020202] to-transparent" />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Dynamic Golden Ambient Glow */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-1">
+        <motion.div
+          animate={{
+            opacity: [0.01, 0.03, 0.01],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+          className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-primary/10 blur-[160px] rounded-full"
+        />
       </div>
 
-      {/* Content */}
-      <div className="relative h-full flex flex-col items-center justify-center text-center px-6 z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="max-w-3xl"
-        >
-          <div className="w-px h-12 bg-primary/50 mx-auto mb-8" />
+      <div className="container relative z-10 px-6 mx-auto">
+        <div className="max-w-5xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <span className="glam-section-label group cursor-default">
+              SISTEMA INTELIGENTE DE AGENDAMENTO
+              <span className="block h-px w-12 bg-primary mt-2 mx-auto transition-all duration-500 group-hover:w-24" />
+            </span>
 
-          <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-light italic text-foreground mb-4 leading-[1.1]">
-            Beleza & Estilo
-          </h1>
-          <h2 className="font-display text-2xl md:text-3xl font-light text-foreground/70 mb-6">
-            em um só lugar
-          </h2>
+            <h1 className="text-balance mb-16 font-bold leading-tight tracking-tighter sm:text-7xl">
+              A Revolução do <span className="text-primary glow-animation">Agendamento</span> <br />
+              <span className="font-light">Simples. Rápido.</span> <b>Premium.</b>
+            </h1>
 
-          <p className="font-body text-sm md:text-base text-muted-foreground max-w-xl mx-auto mb-4 leading-relaxed tracking-wide">
-            Agende serviços de barbearia e salão de beleza com os melhores profissionais da cidade. 
-            Para ele e para ela — tudo em uma plataforma única.
-          </p>
-
-          <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground/60 tracking-[0.2em] uppercase font-body mt-8">
-            <span>Barba</span>
-            <span className="w-1 h-1 rounded-full bg-primary/40" />
-            <span>Cabelo</span>
-            <span className="w-1 h-1 rounded-full bg-primary/40" />
-            <span>Estética</span>
-            <span className="w-1 h-1 rounded-full bg-primary/40" />
-            <span>Beleza</span>
-          </div>
-        </motion.div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          className="absolute bottom-8"
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <div className="w-px h-8 bg-gradient-to-b from-primary/50 to-transparent" />
-        </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="flex justify-center"
+            >
+              <Link to="/agendar" className="btn-premium w-full sm:w-auto min-w-[320px] text-lg">
+                Começar Experiência
+              </Link>
+            </motion.div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

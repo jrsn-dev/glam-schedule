@@ -2,42 +2,25 @@ import { useGender } from '@/contexts/GenderContext';
 import { motion } from 'framer-motion';
 import { Scissors, Sparkles, Eye, Droplets, Flame, Crown, Star, Clock } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from './ui/carousel';
+import { api } from '@/services/api';
+import { Service } from '@/services/data';
+import { Link } from 'react-router-dom';
 
-interface Service {
-  id: string;
-  name: string;
-  description: string;
-  duration: number;
-  priceFrom: number;
-  gender: 'male' | 'female';
-  icon: LucideIcon;
-  isPopular?: boolean;
-}
-
-const services: Service[] = [
-  { id: 'm1', name: 'Corte Clássico', description: 'Tesoura e máquina com acabamento perfeito', duration: 45, priceFrom: 45, gender: 'male', icon: Scissors, isPopular: true },
-  { id: 'm2', name: 'Barba Completa', description: 'Modelagem com navalha e toalha quente', duration: 30, priceFrom: 35, gender: 'male', icon: Sparkles },
-  { id: 'm3', name: 'Corte + Barba', description: 'Combo completo para o homem moderno', duration: 75, priceFrom: 70, gender: 'male', icon: Crown, isPopular: true },
-  { id: 'm4', name: 'Hidratação Capilar', description: 'Tratamento profundo para fios saudáveis', duration: 40, priceFrom: 50, gender: 'male', icon: Droplets },
-  { id: 'm5', name: 'Pigmentação de Barba', description: 'Cobertura de falhas e uniformização', duration: 45, priceFrom: 60, gender: 'male', icon: Eye },
-  { id: 'm6', name: 'Sobrancelha Masculina', description: 'Design limpo e natural', duration: 15, priceFrom: 20, gender: 'male', icon: Eye },
-  { id: 'm7', name: 'Relaxamento', description: 'Alisamento suave e controle de volume', duration: 60, priceFrom: 80, gender: 'male', icon: Sparkles },
-  { id: 'm8', name: 'Hot Towel', description: 'Tratamento facial com toalha quente', duration: 20, priceFrom: 25, gender: 'male', icon: Flame },
-  { id: 'f1', name: 'Corte Feminino', description: 'Corte personalizado para todos os estilos', duration: 45, priceFrom: 60, gender: 'female', icon: Scissors, isPopular: true },
-  { id: 'f2', name: 'Escova', description: 'Modelagem com secador e escova profissional', duration: 40, priceFrom: 45, gender: 'female', icon: Sparkles },
-  { id: 'f3', name: 'Progressiva', description: 'Alisamento duradouro com tratamento', duration: 120, priceFrom: 200, gender: 'female', icon: Star },
-  { id: 'f4', name: 'Coloração', description: 'Cor vibrante e duradoura para seus fios', duration: 90, priceFrom: 150, gender: 'female', icon: Sparkles },
-  { id: 'f5', name: 'Design de Sobrancelhas', description: 'Design perfeito para o seu rosto', duration: 30, priceFrom: 35, gender: 'female', icon: Eye, isPopular: true },
-  { id: 'f6', name: 'Manicure', description: 'Cuidado completo para suas unhas', duration: 40, priceFrom: 30, gender: 'female', icon: Crown },
-  { id: 'f7', name: 'Maquiagem Social', description: 'Look perfeito para qualquer ocasião', duration: 60, priceFrom: 120, gender: 'female', icon: Sparkles },
-  { id: 'f8', name: 'Limpeza de Pele', description: 'Pele renovada e radiante', duration: 50, priceFrom: 80, gender: 'female', icon: Droplets },
-];
+const iconMap: Record<string, LucideIcon> = {
+  Scissors, Sparkles, Eye, Droplets, Flame, Crown, Star, Clock
+};
 
 const FeaturedServices = () => {
-  const { gender, setGender } = useGender();
+  const { gender } = useGender();
+  const [services, setServices] = useState<Service[]>([]);
 
-  const activeGender = gender || 'male';
-  const filtered = services.filter((s) => s.gender === activeGender);
+  useEffect(() => {
+    api.getServices().then(setServices);
+  }, []);
+
+  const filtered = gender ? services.filter((s) => s.gender === gender) : services;
 
   return (
     <section className="py-20 px-4" id="servicos">
@@ -50,82 +33,77 @@ const FeaturedServices = () => {
           <h2 className="glam-section-title">Escolha o que você precisa</h2>
         </div>
 
-        {/* Gender Switch */}
-        <div className="flex items-center justify-center mb-10">
-          <div className="inline-flex items-center rounded-full border border-border bg-card p-1 gap-1">
-            <button
-              onClick={() => setGender('male')}
-              className={`px-6 py-2.5 rounded-full text-sm font-body font-medium tracking-wide transition-all duration-300 ${
-                activeGender === 'male'
-                  ? 'bg-male text-background shadow-md'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              Para Eles
-            </button>
-            <button
-              onClick={() => setGender('female')}
-              className={`px-6 py-2.5 rounded-full text-sm font-body font-medium tracking-wide transition-all duration-300 ${
-                activeGender === 'female'
-                  ? 'bg-female text-background shadow-md'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              Para Elas
-            </button>
+        <Carousel
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-2 md:-ml-4">
+            {filtered.map((service, i) => {
+              const Icon = iconMap[service.iconName] || Scissors;
+              const isMale = service.gender === 'male';
+
+              return (
+                <CarouselItem key={service.id} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+                  <motion.div
+                    className="p-8 h-full hover:-translate-y-2 relative overflow-hidden group transition-all duration-700 rounded-none border-b border-white/5"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-40px' }}
+                    transition={{ delay: i * 0.04, duration: 0.4 }}
+                  >
+                    {service.isPopular && (
+                      <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-primary text-primary-foreground text-[10px] font-medium tracking-wider font-body">
+                        Mais pedido
+                      </span>
+                    )}
+
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center mb-4 ${isMale ? 'bg-male/10' : 'bg-female/10'
+                        }`}
+                      aria-hidden="true"
+                    >
+                      <Icon size={18} className={isMale ? 'text-male' : 'text-female'} />
+                    </div>
+
+                    <h3 className="text-2xl mb-3 font-medium tracking-tight group-hover:text-primary transition-colors">{service.name}</h3>
+                    <p className="text-sm md:text-base text-muted-foreground/80 mb-8 line-clamp-2 font-light leading-relaxed">
+                      {service.description}
+                    </p>
+
+                    <div className="flex items-center justify-between mb-8 mt-auto">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Iniciando em</span>
+                        <span className="text-lg font-medium text-primary">
+                          R$ {service.priceFrom}
+                        </span>
+                      </div>
+                      <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 border border-border/40 px-3 py-1 rounded-full flex items-center gap-2">
+                        <Clock size={12} className="opacity-40" />
+                        {service.duration} MIN
+                      </span>
+                    </div>
+
+                    <Link
+                      to="/agendar"
+                      state={{ serviceId: service.id }}
+                      className="block w-full text-center py-4 rounded-full bg-secondary/50 border border-border/40 text-foreground text-[10px] uppercase tracking-[0.2em] font-medium hover:bg-primary hover:text-primary-foreground hover:border-transparent transition-all duration-500 focus:outline-none focus:ring-1 focus:ring-primary focus:ring-offset-2"
+                      aria-label={`Agendar ${service.name}`}
+                    >
+                      Agendar Agora
+                    </Link>
+                  </motion.div>
+                </CarouselItem>
+              );
+            })}
+          </CarouselContent>
+          <div className="flex justify-end gap-2 mt-8">
+            <CarouselPrevious className="static translate-y-0" />
+            <CarouselNext className="static translate-y-0" />
           </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {filtered.map((service, i) => {
-            const Icon = service.icon;
-            const isMale = service.gender === 'male';
-
-            return (
-              <motion.div
-                key={service.id}
-                className="glam-card p-6 hover:-translate-y-1 relative overflow-hidden group"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ delay: i * 0.04, duration: 0.4 }}
-              >
-                {service.isPopular && (
-                  <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-primary text-primary-foreground text-[10px] font-medium tracking-wider font-body">
-                    Mais pedido
-                  </span>
-                )}
-
-                <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center mb-4 ${
-                    isMale ? 'bg-male/10' : 'bg-female/10'
-                  }`}
-                >
-                  <Icon size={18} className={isMale ? 'text-male' : 'text-female'} />
-                </div>
-
-                <h3 className="font-display text-xl mb-1">{service.name}</h3>
-                <p className="text-[13px] text-muted-foreground mb-4 line-clamp-2 font-body">
-                  {service.description}
-                </p>
-
-                <div className="flex items-center justify-between mb-5">
-                  <span className="text-sm text-primary font-medium font-body">
-                    a partir de R$ {service.priceFrom}
-                  </span>
-                  <span className="text-xs text-muted-foreground bg-elevated px-2.5 py-1 rounded-full flex items-center gap-1 font-body">
-                    <Clock size={10} />
-                    {service.duration} min
-                  </span>
-                </div>
-
-                <button className="w-full py-2.5 rounded-lg border border-primary/60 text-primary text-sm hover:bg-primary hover:text-primary-foreground transition-all duration-200 font-body">
-                  Agendar
-                </button>
-              </motion.div>
-            );
-          })}
-        </div>
+        </Carousel>
       </div>
     </section>
   );

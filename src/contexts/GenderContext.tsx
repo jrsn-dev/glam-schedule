@@ -9,7 +9,7 @@ interface GenderContextValue {
 
 const GenderContext = createContext<GenderContextValue>({
   gender: null,
-  setGender: () => {},
+  setGender: () => { },
 });
 
 export const useGender = () => useContext(GenderContext);
@@ -32,14 +32,15 @@ export const GenderProvider = ({ children }: { children: ReactNode }) => {
       } else {
         localStorage.removeItem('glam-gender');
       }
-    } catch {}
+    } catch { }
   };
 
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.remove('theme-female');
-    if (gender === 'female') {
-      root.classList.add('theme-female');
+    if (gender) {
+      root.setAttribute('data-theme', gender);
+    } else {
+      root.removeAttribute('data-theme');
     }
   }, [gender]);
 
