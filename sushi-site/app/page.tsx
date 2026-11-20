@@ -35,6 +35,63 @@ function Hero(){
  const ref=useRef<HTMLElement>(null);
  useGSAP(()=>{
    const mm=gsap.matchMedia();
+   // The final positions are managed by CSS slots. Animate only the inner images.
+   const paths=[
+     {name:'salmon-a',x:-245,y:-190,rotation:-27},
+     {name:'tuna-a',x:230,y:-205,rotation:24},
+     {name:'uramaki',x:-255,y:150,rotation:-34},
+     {name:'salmon-b',x:245,y:205,rotation:28},
+     {name:'tuna-b',x:-145,y:265,rotation:-23},
+     {name:'wasabi',x:175,y:215,rotation:22},
+     {name:'ginger',x:-190,y:205,rotation:-16},
+     {name:'shoyu',x:220,y:-185,rotation:28},
+     {name:'hashi',x:280,y:-210,rotation:38}
+   ];
+   mm.add('(min-width: 900px) and (prefers-reduced-motion: no-preference)',()=>{
+     const tl=gsap.timeline({
+       defaults:{ease:'none'},
+       scrollTrigger:{
+         trigger:ref.current,start:'top top',end:'+=220%',
+         scrub:1.15,pin:true,anticipatePin:1,invalidateOnRefresh:true
+       }
+     });
+     // At progress=0 only the large, empty board is visible.
+     // As the camera pulls back, ingredients arrive from every side.
+     tl.fromTo('.combo-scene',{scale:1.52},{scale:1,duration:3.85,ease:'power2.inOut'},0);
+     paths.forEach((piece,i)=>{
+       const offset=.44+i*.31;
+       tl.fromTo('.hero-'+piece.name,
+         {xPercent:piece.x,yPercent:piece.y,rotation:piece.rotation,scale:.64,autoAlpha:0},
+         {xPercent:0,yPercent:0,rotation:0,scale:1,autoAlpha:1,duration:.95,ease:'power3.out'},
+         offset);
+     });
+     tl.fromTo('.combo-seal',{y:18,autoAlpha:0},{y:0,autoAlpha:1,duration:.45},3.0)
+       .fromTo('.hero-progress-fill',{scaleX:0},{scaleX:1,duration:4.25,ease:'none'},0);
+   });
+   mm.add('(max-width: 899px) and (prefers-reduced-motion: no-preference)',()=>{
+     const tl=gsap.timeline({
+       defaults:{ease:'none'},
+       scrollTrigger:{
+         trigger:ref.current,start:'top top',end:'bottom 18%',
+         scrub:.7,invalidateOnRefresh:true
+       }
+     });
+     // No pin on mobile; the board remains inside the normal document flow.
+     tl.fromTo('.combo-scene',{scale:1.24},{scale:1,duration:3.2,ease:'power2.inOut'},0);
+     paths.forEach((piece,i)=>{
+       tl.fromTo('.hero-'+piece.name,
+         {xPercent:piece.x*.62,yPercent:piece.y*.62,rotation:piece.rotation*.6,scale:.72,autoAlpha:0},
+         {xPercent:0,yPercent:0,rotation:0,scale:1,autoAlpha:1,duration:.72,ease:'power2.out'},
+         .34+i*.24);
+     });
+     tl.fromTo('.combo-seal',{autoAlpha:0,y:10},{autoAlpha:1,y:0,duration:.4},2.5)
+       .fromTo('.hero-progress-fill',{scaleX:0},{scaleX:1,duration:3.2,ease:'none'},0);
+   });
+   return()=>mm.revert();
+ },{scope:ref});function Hero(){
+ const ref=useRef<HTMLElement>(null);
+ useGSAP(()=>{
+   const mm=gsap.matchMedia();
    const pieces=[
      {name:'salmon-a',x:-140,y:-95,rotation:-22},
      {name:'tuna-a',x:135,y:-110,rotation:17},
@@ -94,12 +151,14 @@ function Hero(){
      <p>Uma tábua. Cada ingrediente em seu lugar. Role a página e descubra como nasce o nosso combo.</p>
      <a className="outline-button" href="#cardapio">EXPLORAR O CARDÁPIO ↗</a>
    </div>
-   <div className="combo-stage" role="img" aria-label="Combo de sushi montado sobre uma tábua escura, com nigiris, uramakis, wasabi, gengibre, shoyu e hashi">
-      <img className="combo-board-img" src="/img/hero/board.png" alt="" draggable={false} fetchPriority="high"/>
-      {combo.map(item=><span className={'combo-slot hero-slot-'+item.name} key={item.name} aria-hidden="true">
-        <img className={'combo-food hero-'+item.name} src={'/img/hero/'+item.file} alt="" draggable={false}/>
-      </span>)}
-      <span className="combo-seal" aria-hidden="true">HANAMI · OMAKASE</span>
+   <div className="combo-stage" role="img" aria-label="Tábua escura de sushi sendo montada durante a rolagem com nigiris, uramakis, wasabi, gengibre, shoyu e hashi">
+      <div className="combo-scene">
+        <img className="combo-board-img" src="/img/hero/board.png" alt="" draggable={false} fetchPriority="high"/>
+        {combo.map(item=><span className={'combo-slot hero-slot-'+item.name} key={item.name} aria-hidden="true">
+          <img className={'combo-food hero-'+item.name} src={'/img/hero/'+item.file} alt="" draggable={false}/>
+        </span>)}
+        <span className="combo-seal" aria-hidden="true">HANAMI · OMAKASE</span>
+      </div>
    </div>
    <div className="hero-scroll-indicator" aria-hidden="true"><span>ROLE PARA MONTAR O COMBO</span><div className="hero-progress"><span className="hero-progress-fill"/></div><span>01 / 04</span></div>
  </section>;
