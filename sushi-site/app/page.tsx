@@ -35,79 +35,102 @@ function Hero(){
  const ref=useRef<HTMLElement>(null);
  useGSAP(()=>{
    const mm=gsap.matchMedia();
+   const pieces=[
+     {name:'salmon-a',x:-140,y:-95,rotation:-22},
+     {name:'tuna-a',x:135,y:-110,rotation:17},
+     {name:'uramaki',x:-155,y:85,rotation:-16},
+     {name:'salmon-b',x:140,y:80,rotation:20},
+     {name:'tuna-b',x:-75,y:135,rotation:-10},
+     {name:'wasabi',x:95,y:80,rotation:12},
+     {name:'ginger',x:-90,y:120,rotation:-10},
+     {name:'shoyu',x:130,y:-105,rotation:12},
+     {name:'hashi',x:150,y:-120,rotation:13}
+   ];
    mm.add('(min-width: 900px) and (prefers-reduced-motion: no-preference)',()=>{
-     // Prancha escura visível desde o início. O scroll só monta os ingredientes.
      const tl=gsap.timeline({
-       defaults:{ease:'power2.out'},
-       scrollTrigger:{trigger:ref.current,start:'top top',end:'+=250%',pin:true,scrub:1.4,anticipatePin:1,invalidateOnRefresh:true}
+       defaults:{ease:'none'},
+       scrollTrigger:{trigger:ref.current,start:'top top',end:'+=185%',scrub:0.65,pin:true,anticipatePin:1,invalidateOnRefresh:true}
      });
-     const moves=[
-       {selector:'.hero-salmon-a',from:{x:-400,y:-260,rotate:-22,scale:.58}},
-       {selector:'.hero-tuna-a',from:{x:460,y:-260,rotate:28,scale:.53}},
-       {selector:'.hero-uramaki',from:{x:-430,y:220,rotate:-32,scale:.5}},
-       {selector:'.hero-salmon-b',from:{x:410,y:290,rotate:25,scale:.52}},
-       {selector:'.hero-tuna-b',from:{x:160,y:410,rotate:35,scale:.54}},
-       {selector:'.hero-wasabi',from:{x:280,y:260,rotate:40,scale:.42}},
-       {selector:'.hero-ginger',from:{x:-330,y:300,rotate:-42,scale:.42}},
-       {selector:'.hero-shoyu',from:{x:370,y:-180,rotate:35,scale:.64}},
-       {selector:'.hero-hashi',from:{x:370,y:-250,rotate:50,scale:.83}}
-     ];
-     moves.forEach((item,i)=>{
-       tl.fromTo(item.selector,{...item.from,opacity:0},
-        {x:0,y:0,rotate:0,scale:1,opacity:1,duration:.95,ease:'power3.out',immediateRender:true},i*.36);
+     pieces.forEach((piece,i)=>{
+       tl.fromTo('.hero-'+piece.name,
+         {xPercent:piece.x,yPercent:piece.y,rotation:piece.rotation,scale:.72,autoAlpha:0},
+         {xPercent:0,yPercent:0,rotation:0,scale:1,autoAlpha:1,ease:'power2.out',duration:1},i*.26);
      });
-     tl.fromTo('.combo-seal',{y:25,opacity:0},{y:0,opacity:1,duration:.6},2.9)
-       .to('.hero-progress-fill',{scaleX:1,duration:4,ease:'none'},0)
-       .to('.hero-copy',{y:-20,opacity:.76,duration:1},3.05);
+     tl.to('.hero-progress-fill',{scaleX:1,duration:3.3,ease:'none'},0)
+       .fromTo('.combo-seal',{y:10,autoAlpha:0},{y:0,autoAlpha:1,duration:.45},2.5);
    });
    mm.add('(max-width: 899px) and (prefers-reduced-motion: no-preference)',()=>{
-     const tl=gsap.timeline({scrollTrigger:{trigger:'.combo-stage',start:'top 90%',end:'bottom 35%',scrub:.8}});
-     tl.fromTo('.combo-food',{y:80,opacity:0,scale:.74},{y:0,opacity:1,scale:1,duration:.7,stagger:.18,ease:'power2.out'});
+     const tl=gsap.timeline({
+       scrollTrigger:{trigger:ref.current,start:'top top',end:'bottom 25%',scrub:.45}
+     });
+     pieces.forEach((piece,i)=>{
+       tl.fromTo('.hero-'+piece.name,{yPercent:65,xPercent:piece.x*.35,rotation:piece.rotation*.4,scale:.8,autoAlpha:0},
+         {yPercent:0,xPercent:0,rotation:0,scale:1,autoAlpha:1,duration:.7,ease:'power2.out'},i*.18);
+     });
+     tl.to('.hero-progress-fill',{scaleX:1,duration:2.2,ease:'none'},0);
    });
    return()=>mm.revert();
  },{scope:ref});
  const combo=[
-  {name:'salmon-a',file:'salmon.png',label:'Nigiris de salmão'},
-  {name:'tuna-a',file:'tuna.png',label:'Nigiris de atum'},
-  {name:'uramaki',file:'uramaki.png',label:'Uramakis variados'},
-  {name:'salmon-b',file:'salmon.png',label:''},
-  {name:'tuna-b',file:'tuna.png',label:''},
-  {name:'wasabi',file:'wasabi.png',label:'Wasabi'},
-  {name:'ginger',file:'ginger.png',label:'Gengibre em conserva'},
-  {name:'shoyu',file:'soy-sauce.png',label:'Pires de shoyu'},
-  {name:'hashi',file:'chopsticks.png',label:'Hashis'}
+   {name:'salmon-a',file:'salmon.png',label:'Nigiri de salmão'},
+   {name:'tuna-a',file:'tuna.png',label:'Nigiri de atum'},
+   {name:'uramaki',file:'uramaki.png',label:'Uramaki'},
+   {name:'salmon-b',file:'salmon.png',label:''},
+   {name:'tuna-b',file:'tuna.png',label:''},
+   {name:'wasabi',file:'wasabi.png',label:'Wasabi'},
+   {name:'ginger',file:'ginger.png',label:'Gengibre'},
+   {name:'shoyu',file:'soy-sauce.png',label:'Shoyu'},
+   {name:'hashi',file:'chopsticks.png',label:'Hashis'}
  ];
  return <section className="hero hero-assembly hero-png" ref={ref} id="inicio">
-   <header className="header"><a className="brand" href="#inicio">花 <span>HANAMI <small>SUSHI EXPERIENCE</small></span></a><nav aria-label="Navegação principal"><a href="#historia">Nossa história</a><a href="#cardapio">Cardápio</a><a href="#ingredientes">Ingredientes</a><a href="#contato">Contato</a></nav><a className="nav-book" href="#reservas">RESERVAR ↗</a></header>
-   <span className="hero-kanji" aria-hidden="true">寿司</span>
-   <div className="hero-copy"><span className="eyebrow">A ARTE DO SUSHI</span><h1>Uma obra<br/>montada em <em>detalhes.</em></h1><p>Uma tábua. Cada ingrediente em seu lugar. Role para acompanhar o combo ganhar vida.</p><a className="outline-button" href="#cardapio">EXPLORE O CARDÁPIO ↗</a></div>
-   <div className="combo-stage" role="group" aria-label="Montagem cinematográfica de um combo de sushi sobre tábua escura">
-     <div className="combo-board-fallback" aria-hidden="true"/>
-     <img className="combo-board-img" src="/img/hero/board.png" alt="Tábua premium de madeira escura vazia" fetchPriority="high"/>
-     {combo.map(item=><img key={item.name}
-       className={'combo-food hero-'+item.name}
-       src={'/img/hero/'+item.file} alt={item.label} loading="eager"/>)}
-     <span className="combo-seal">HANAMI • OMAKASE</span>
+   <header className="header">
+     <a className="brand" href="#inicio">花 <span>HANAMI <small>SUSHI EXPERIENCE</small></span></a>
+     <nav aria-label="Navegação principal"><a href="#historia">História</a><a href="#cardapio">Cardápio</a><a href="#ingredientes">Ingredientes</a><a href="#contato">Contato</a></nav>
+     <a className="nav-book" href="#reservas">RESERVAR ↗</a>
+   </header>
+   <div className="hero-copy">
+     <span className="eyebrow">A ARTE DO SUSHI · HANAMI</span>
+     <h1>Uma experiência<br/>feita de <em>detalhes.</em></h1>
+     <p>Uma tábua. Cada ingrediente em seu lugar. Role a página e descubra como nasce o nosso combo.</p>
+     <a className="outline-button" href="#cardapio">EXPLORAR O CARDÁPIO ↗</a>
    </div>
-   <span className="hero-side">JAPANESE DINING · EST. 2026</span>
-   <div className="hero-progress"><span className="hero-progress-fill"/></div>
-   <a className="scroll-cue" href="#historia">↓ ROLE PARA MONTAR O COMBO</a>
+   <div className="combo-stage" role="img" aria-label="Combo de sushi montado sobre uma tábua escura, com nigiris, uramakis, wasabi, gengibre, shoyu e hashi">
+      <img className="combo-board-img" src="/img/hero/board.png" alt="" draggable={false} fetchPriority="high"/>
+      {combo.map(item=><span className={'combo-slot hero-slot-'+item.name} key={item.name} aria-hidden="true">
+        <img className={'combo-food hero-'+item.name} src={'/img/hero/'+item.file} alt="" draggable={false}/>
+      </span>)}
+      <span className="combo-seal" aria-hidden="true">HANAMI · OMAKASE</span>
+   </div>
+   <div className="hero-scroll-indicator" aria-hidden="true"><span>ROLE PARA MONTAR O COMBO</span><div className="hero-progress"><span className="hero-progress-fill"/></div><span>01 / 04</span></div>
  </section>;
 }
 function Menu(){
  const ref=useRef<HTMLElement>(null);
- useGSAP(()=>{const mm=gsap.matchMedia();
- mm.add('(min-width: 900px) and (prefers-reduced-motion: no-preference)',()=>{
- const tl=gsap.timeline({defaults:{ease:'none'},scrollTrigger:{trigger:ref.current,start:'top top',end:'+=400%',pin:true,scrub:1,anticipatePin:1,invalidateOnRefresh:true}});
- tl.to('.menu-intro',{yPercent:-70,opacity:0,duration:.55},0);
- dishes.forEach((d,i)=>{const scope='[data-dish="'+d.id+'"]',dir=i%2===0?-1:1;
- tl.fromTo(scope+' .dish-photo',{yPercent:135,xPercent:dir*25,scale:.8,opacity:0,rotate:dir*12},{yPercent:0,xPercent:0,scale:1,opacity:1,rotate:0,duration:.7,ease:'power2.out'},i);
- tl.fromTo(scope+' .dish-copy > *',{y:90,opacity:0,clipPath:'inset(0% 0% 100% 0%)'},{y:0,opacity:1,clipPath:'inset(0% 0% 0% 0%)',duration:.55,stagger:.12},i+.24);
- tl.fromTo(scope+' .dish-trail',{scaleX:0,opacity:0},{scaleX:1,opacity:.55,duration:.5},i+.18);
- if(i<dishes.length-1)tl.to([scope+' .dish-photo',scope+' .dish-copy',scope+' .dish-trail'],{yPercent:-130,xPercent:dir*-20,opacity:0,scale:.8,duration:.65,ease:'power2.in'},i+1);
- });
- });return()=>mm.revert()},{scope:ref});
- return <section className="menu" id="cardapio" ref={ref}><div className="menu-intro"><span className="eyebrow">UMA JORNADA DE SABORES</span><h2>Nosso <em>cardápio.</em></h2><p>Uma experiência pensada em cada detalhe, do primeiro encontro ao último sabor.</p></div>{dishes.map((d,i)=><article key={d.id} data-dish={d.id} className={'dish '+(i%2===0?'left':'right')}><div className="dish-photo"><img src={d.img} alt={'Prato ilustrativo: '+d.tag} loading="lazy"/></div><span className="dish-trail" aria-hidden="true"/><div className="dish-copy"><span className="eyebrow">{d.tag}</span><h3>{d.title}</h3><p>{d.body}</p><a className="text-link" href="#reservas">VIVA ESSA EXPERIÊNCIA ↗</a></div></article>)}</section>;
+ useGSAP(()=>{
+   const mm=gsap.matchMedia();
+   mm.add('(prefers-reduced-motion: no-preference)',()=>{
+     gsap.fromTo('.menu-intro > *',{y:32,autoAlpha:0},{y:0,autoAlpha:1,stagger:.1,duration:.8,ease:'power2.out',
+       scrollTrigger:{trigger:'.menu-intro',start:'top 85%',toggleActions:'play none none reverse'}});
+     gsap.utils.toArray<HTMLElement>('.dish').forEach((card)=>{
+       const picture=card.querySelector('.dish-photo');
+       const copy=card.querySelectorAll('.dish-copy > *');
+       if(picture)gsap.fromTo(picture,{y:72,scale:.9,autoAlpha:0},{y:0,scale:1,autoAlpha:1,duration:1,ease:'power2.out',
+         scrollTrigger:{trigger:card,start:'top 82%',toggleActions:'play none none reverse'}});
+       gsap.fromTo(copy,{y:25,autoAlpha:0},{y:0,autoAlpha:1,stagger:.13,duration:.7,ease:'power2.out',
+         scrollTrigger:{trigger:card,start:'top 72%',toggleActions:'play none none reverse'}});
+     });
+   });
+   return()=>mm.revert();
+ },{scope:ref});
+ return <section className="menu" id="cardapio" ref={ref}>
+   <div className="menu-intro"><span className="eyebrow">UMA JORNADA DE SABORES</span><h2>Nosso <em>cardápio.</em></h2>
+     <p>Da primeira peça ao último detalhe, ingredientes e técnica em harmonia.</p></div>
+   <div className="menu-list">{dishes.map((d,i)=><article key={d.id} data-dish={d.id} className={'dish '+(i%2===0?'left':'right')}>
+     <div className="dish-photo"><img src={d.img} alt={'Seleção ilustrativa de '+d.tag.toLowerCase()} loading="lazy"/></div>
+     <div className="dish-copy"><span className="eyebrow">{d.tag}</span><h3>{d.title}</h3><p>{d.body}</p>
+       <a className="text-link" href="#reservas">CONHEÇA A EXPERIÊNCIA ↗</a></div>
+   </article>)}</div>
+ </section>;
 }
 function Ingredients(){
  const ref=useRef<HTMLElement>(null);
@@ -126,6 +149,6 @@ function Booking(){
  gsap.fromTo('.booking-bg',{yPercent:-12},{yPercent:12,scrollTrigger:{trigger:ref.current,start:'top bottom',end:'bottom top',scrub:true}});
  gsap.fromTo('.booking-content > *',{opacity:0,y:80},{opacity:1,y:0,stagger:.2,duration:.8,ease:'power2.out',scrollTrigger:{trigger:ref.current,start:'top 76%',end:'center 58%',scrub:1}});
  });return()=>mm.revert()},{scope:ref});
- return <section ref={ref} id="reservas" className="booking"><div className="booking-band"><img className="booking-bg" src={photo.booking} alt="" loading="lazy"/><div className="booking-content"><span className="eyebrow">SEU LUGAR À MESA</span><h2>Uma experiência<br/><em>para lembrar.</em></h2><p>Descubra o prazer de viver a gastronomia japonesa com todos os sentidos.</p><a className="outline-button" href="mailto:contato@exemplo.com?subject=Reserva%20Hanami%20Sushi">SOLICITAR RESERVA ↗</a></div></div><footer id="contato" className="footer"><div><a href="#inicio" className="brand">花 <span>HANAMI</span></a><p>Gastronomia japonesa, tempo e intenção.</p></div><div><strong>NAVEGUE</strong><a href="#historia">Nossa história</a><a href="#cardapio">Cardápio</a><a href="#ingredientes">Ingredientes</a></div><div><strong>CONTATO</strong><p>Endereço e contato a definir pelo restaurante.</p></div><div><strong>REDES</strong><p>Instagram e redes sociais a definir.</p><small>© {new Date().getFullYear()} Hanami Sushi</small></div></footer></section>;
+ return <section ref={ref} id="reservas" className="booking"><div className="booking-band"><img className="booking-bg" src={photo.booking} alt="" loading="lazy"/><div className="booking-content"><span className="eyebrow">SEU LUGAR À MESA</span><h2>Uma experiência<br/><em>para lembrar.</em></h2><p>Descubra o prazer de viver a gastronomia japonesa com todos os sentidos.</p><a className="outline-button" href="#contato">SOLICITAR RESERVA ↗</a></div></div><footer id="contato" className="footer"><div><a href="#inicio" className="brand">花 <span>HANAMI</span></a><p>Gastronomia japonesa, tempo e intenção.</p></div><div><strong>NAVEGUE</strong><a href="#historia">Nossa história</a><a href="#cardapio">Cardápio</a><a href="#ingredientes">Ingredientes</a></div><div><strong>CONTATO</strong><p>Endereço e contato a definir pelo restaurante.</p></div><div><strong>REDES</strong><p>Instagram e redes sociais a definir.</p><small>© {new Date().getFullYear()} Hanami Sushi</small></div></footer></section>;
 }
 export default function Home(){useSmoothScroll();return <main><Hero/><Split id="historia" image={photo.story} number="01" eyebrow="A ESSÊNCIA POR TRÁS DE CADA PEÇA" title="Uma história contada em sabores." body="Mais do que preparar sushi, cultivamos o encontro entre tradição e criatividade. Cada escolha nasce do respeito aos ingredientes e da dedicação ao gesto."/><section className="quote"><span className="eyebrow">MAIS DO QUE UMA REFEIÇÃO</span><p>“A verdadeira arte revela-se nos <em>pequenos detalhes.</em>”</p><span aria-hidden="true">花</span></section><Menu/><Split id="eventos" image={photo.event} number="03" eyebrow="MOMENTOS QUE PERMANECEM" title="Encontros que viram memórias." body="Uma noite especial merece sabores extraordinários. Compartilhe a experiência de estar à mesa e descubra a beleza dos rituais japoneses." reverse/><Ingredients/><Booking/></main>}
