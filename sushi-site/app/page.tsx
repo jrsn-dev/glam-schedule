@@ -86,7 +86,7 @@ function Hero(){
    <header className="header">
      <a className="brand" href="#inicio">花 <span>HANAMI <small>SUSHI EXPERIENCE</small></span></a>
      <nav aria-label="Navegação principal"><a href="#historia">História</a><a href="#cardapio">Cardápio</a><a href="#ingredientes">Ingredientes</a><a href="#contato">Contato</a></nav>
-     <a className="nav-book" href="#reservas">RESERVAR ↗</a>
+     <details className="mobile-nav"><summary aria-label="Abrir navegação">MENU <span aria-hidden="true">☰</span></summary><div className="mobile-nav-links"><a href="#historia">História</a><a href="#cardapio">Cardápio</a><a href="#ingredientes">Ingredientes</a><a href="#reservas">Reservas</a><a href="#contato">Contato</a></div></details><a className="nav-book" href="#reservas">RESERVAR ↗</a>
    </header>
    <div className="hero-copy">
      <span className="eyebrow">A ARTE DO SUSHI · HANAMI</span>
