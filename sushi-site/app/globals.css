@@ -80,3 +80,125 @@
 @media(prefers-reduced-motion:reduce) and (max-width:899px){
  .hero-png .combo-stage{transform:none!important}
 }
+
+/* UX refresh 2026: stage aligns to the actual 1532:819 board, not a square.
+   Slots never animate: GSAP animates children, preserving final placement. */
+html,body{max-width:100%;overflow-x:clip}
+:root{--bg:#090909;--fg:#f4f0e9;--accent:#c8685b;--muted:#b2aca6}
+.hero.hero-png{height:100svh;min-height:690px;padding:100px clamp(28px,7.5vw,118px) 90px;overflow:hidden;background:#090909}
+.hero-png .header{padding:24px clamp(28px,7.5vw,118px);gap:20px}
+.hero-png .header nav{gap:clamp(14px,2vw,29px)}
+.hero-png .header nav a{font-size:12px;white-space:nowrap}
+.hero-png .hero-copy{width:min(37vw,470px);max-width:none;flex:0 0 auto;z-index:3}
+.hero-png .hero-copy h1{font-size:clamp(40px,4vw,67px);line-height:1.18;letter-spacing:-.045em;margin:24px 0}
+.hero-png .hero-copy p{font-size:15px;line-height:1.75;color:#bfb8b0;max-width:360px}
+.hero-png .eyebrow{letter-spacing:.21em}
+.hero-png .combo-stage{
+ position:absolute;top:49%;right:2vw;bottom:auto;width:min(57vw,850px);
+ aspect-ratio:1532/819;height:auto;transform:translateY(-50%);
+ pointer-events:none;z-index:2
+}
+.hero-png .combo-board-img{
+ position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;
+ z-index:1;filter:none
+}
+.hero-png .combo-slot{position:absolute;display:block;z-index:3;height:auto;line-height:0;overflow:visible}
+.hero-png .combo-slot .combo-food{
+ position:relative;display:block;inset:auto;left:auto;top:auto;right:auto;bottom:auto;
+ width:100%;height:auto;max-width:100%;object-fit:contain;transform-origin:50% 55%;
+ filter:drop-shadow(0 5px 4px rgba(0,0,0,.28));will-change:transform,opacity
+}
+.hero-png .hero-slot-salmon-a{left:17%;top:26%;width:23%}
+.hero-png .hero-slot-tuna-a{left:40%;top:26%;width:23%}
+.hero-png .hero-slot-uramaki{left:61%;top:23%;width:25%}
+.hero-png .hero-slot-salmon-b{left:30%;top:47%;width:23%}
+.hero-png .hero-slot-tuna-b{left:53%;top:48%;width:22%}
+.hero-png .hero-slot-wasabi{left:77%;top:63%;width:8%}
+.hero-png .hero-slot-ginger{left:16%;top:62%;width:10%}
+.hero-png .hero-slot-shoyu{left:78%;top:8%;width:15%;z-index:4}
+.hero-png .hero-slot-hashi{left:78%;top:-6%;width:23%;z-index:5}
+.hero-png .combo-seal{bottom:10%;right:19%;font-size:9px;color:#d9b3a3;opacity:0;z-index:7}
+.hero-png .hero-scroll-indicator{
+ position:absolute;bottom:35px;left:7.5vw;right:7.5vw;display:flex;align-items:center;gap:17px;
+ font-size:9px;letter-spacing:.22em;color:#968b84;z-index:8
+}
+.hero-png .hero-progress{position:relative;left:auto;right:auto;bottom:auto;height:1px;flex:1;background:#43302b}
+.hero-png .hero-progress-fill{background:var(--accent)}
+.hero-png .hero-side,.hero-png .scroll-cue,.hero-png .hero-kanji{display:none}
+.hero-png .outline-button{padding:0 24px;font-size:10px}
+.hero-png .brand span{font-size:15px}
+.hero-png .combo-board-fallback{display:none}
+
+/* Editorial food journey: each dish is readable and fully scrollable. */
+.menu{height:auto;min-height:0;overflow:visible;background:#10100f;padding:110px clamp(28px,8vw,130px) 130px}
+.menu .menu-intro{position:relative;top:auto;right:auto;max-width:680px;margin:0 auto 85px;text-align:center}
+.menu .menu-intro h2{font-size:clamp(40px,4.4vw,66px);margin:18px 0}
+.menu .menu-intro p{max-width:440px;margin:0 auto}
+.menu .menu-list{max-width:1220px;margin:0 auto;display:flex;flex-direction:column;gap:110px}
+.menu .dish{position:relative;inset:auto;display:grid;grid-template-columns:1fr 1fr;align-items:center;
+ gap:clamp(40px,6vw,100px);min-height:340px;margin:0;pointer-events:auto}
+.menu .dish-photo,.menu .dish.right .dish-photo{position:relative;inset:auto;width:100%;height:390px;overflow:hidden;border-radius:0}
+.menu .dish-photo img{width:100%;height:100%;object-fit:cover;mask-image:none;border-radius:0}
+.menu .dish-copy,.menu .dish.right .dish-copy{position:relative;inset:auto;width:auto;max-width:430px}
+.menu .dish-copy h3{font-size:clamp(29px,3vw,48px);line-height:1.25}
+.menu .dish.right .dish-photo{order:2}
+.menu .dish.right .dish-copy{order:1}
+.menu .dish .dish-trail{display:none}
+.menu .dish-copy p{max-width:350px}
+.menu .text-link{display:inline-block;margin-top:12px}
+.split{margin:125px auto}
+.split-text{padding:clamp(40px,5vw,75px);background:#eee9e1}
+.split-photo{height:460px}
+.split-text p{max-width:440px}
+.quote{min-height:340px;padding:70px 10vw}
+.ingredients{background:#10100f}
+.booking{background:#090909}
+.booking-content{max-width:720px}
+.footer{padding-top:75px}
+:focus-visible{outline:2px solid #d68171;outline-offset:5px}
+@media(min-width:900px) and (max-width:1120px){
+ .hero-png .header nav{gap:13px}
+ .hero-png .hero-copy{width:35vw}
+ .hero-png .hero-copy h1{font-size:clamp(35px,3.7vw,46px)}
+ .hero-png .combo-stage{width:57vw;right:0}
+}
+@media(max-width:899px){
+ .hero.hero-png{height:auto;min-height:100svh;padding:115px 7vw 90px;display:flex;align-items:stretch;flex-direction:column;justify-content:flex-start}
+ .hero-png .header{padding:22px 7vw}
+ .hero-png .header nav{display:none}
+ .hero-png .hero-copy{width:100%;max-width:560px;flex:initial}
+ .hero-png .hero-copy h1{font-size:clamp(38px,7vw,58px);margin:15px 0;max-width:600px}
+ .hero-png .hero-copy p{font-size:14px;margin-bottom:18px}
+ .hero-png .combo-stage{position:relative;right:auto;top:auto;bottom:auto;
+   width:min(100%,650px);max-width:100%;margin:15px auto 5px;transform:none;flex:0 0 auto}
+ .hero-png .hero-scroll-indicator{left:7vw;right:7vw;bottom:25px}
+ .hero-png .combo-seal{bottom:8%;font-size:7px}
+ .menu{padding:85px 7vw 90px}
+ .menu .menu-list{gap:75px}
+ .menu .dish{grid-template-columns:1fr;gap:24px}
+ .menu .dish-photo,.menu .dish.right .dish-photo{height:290px;order:0}
+ .menu .dish-copy,.menu .dish.right .dish-copy{order:1;width:100%;max-width:580px}
+ .menu .menu-intro{margin-bottom:55px}
+ .split{margin:85px auto}
+ .split-photo{height:340px}
+}
+@media(max-width:520px){
+ .hero.hero-png{padding-top:112px;padding-bottom:82px;min-height:670px}
+ .hero-png .hero-copy h1{font-size:clamp(36px,10vw,46px)}
+ .hero-png .combo-stage{width:100%;margin:16px auto 0;right:auto;bottom:auto;top:auto}
+ .hero-png .combo-slot .combo-food{filter:drop-shadow(0 3px 2px #0005)}
+ .hero-png .hero-scroll-indicator{font-size:8px;gap:10px;bottom:20px}
+ .menu .dish-photo,.menu .dish.right .dish-photo{height:230px}
+ .menu .menu-list{gap:65px}
+ .menu .dish-copy h3{font-size:31px}
+ .split-photo{height:270px}
+ .footer{gap:35px}
+}
+@media(prefers-reduced-motion:reduce){
+ .hero-png .combo-slot .combo-food{transform:none!important;opacity:1!important;visibility:visible!important}
+ .hero-png .combo-seal{opacity:1!important;visibility:visible!important}
+ .hero-png .combo-stage{transform:translateY(-50%)!important}
+}
+@media(prefers-reduced-motion:reduce) and (max-width:899px){
+ .hero-png .combo-stage{transform:none!important}
+}
