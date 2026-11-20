@@ -29,7 +29,103 @@ function Split({id,image,number,eyebrow,title,body,reverse=false}:{id:string,ima
    .fromTo('.split-text > *',{y:55,opacity:0},{y:0,opacity:1,stagger:.14,duration:.7,ease:'none'},.35)
    .fromTo('.image-caption',{y:20,opacity:0},{y:0,opacity:1,duration:.55},.65);
  });return()=>mm.revert()},{scope:ref});
- return <section id={id} ref={ref} className={'split '+(reverse?'reverse':'')}><div className="split-photo"><img src={image} alt="" loading="lazy"/><span className="image-caption">HANAMI — JAPANESE ART</span></div><div className="split-text"><span className="eyebrow">{eyebrow}</span><small className="split-number">{number} / 04</small><h2>{title}</h2><p>{body}</p><a className="text-link" href="#reservas">DESCUBRA MAIS ↗</a></div></section>;
+ return <section id={id} ref={ref} className={'split '+(reverse?'reverse':'')}><div className="split-photo"><img src={image} alt="" loading="lazy"/><span className="image-caption">MT SUSHI ARTE</span></div><div className="split-text"><span className="eyebrow">{eyebrow}</span><small className="split-number">{number} / 04</small><h2>{title}</h2><p>{body}</p><a className="text-link" href="#reservas">DESCUBRA MAIS ↗</a></div></section>;
+}
+function Hero(){
+ const ref=useRef<HTMLElement>(null);
+ useGSAP(()=>{
+   const mm=gsap.matchMedia();
+   const flightPaths=[
+     {name:'salmon-a',side:'left',rotation:-40},
+     {name:'tuna-a',side:'top',rotation:36},
+     {name:'uramaki',side:'right',rotation:-32},
+     {name:'salmon-b',side:'bottom',rotation:42},
+     {name:'tuna-b',side:'left',rotation:30},
+     {name:'wasabi',side:'right',rotation:-38},
+     {name:'ginger',side:'bottom',rotation:35},
+     {name:'shoyu',side:'top',rotation:-25},
+     {name:'hashi',side:'right',rotation:45}
+   ] as const;
+   // Calculate the distance from each target image to a point beyond the viewport.
+   // A CSS slot still owns the final coordinates, even when resized.
+   const takeoff=(target:Element,side:'left'|'right'|'top'|'bottom')=>{
+     const rect=target.getBoundingClientRect();
+     const margin=Math.max(120,Math.min(window.innerWidth,window.innerHeight)*.23);
+     switch(side){
+       case 'left':return {x:-(rect.right+margin),y:(window.innerHeight/2-rect.top)*.22};
+       case 'right':return {x:window.innerWidth-rect.left+margin,y:(window.innerHeight/2-rect.top)*-.22};
+       case 'top':return {x:(window.innerWidth/2-rect.left)*.26,y:-(rect.bottom+margin)};
+       case 'bottom':return {x:(window.innerWidth/2-rect.left)*-.26,y:window.innerHeight-rect.top+margin};
+     }
+   };
+   mm.add('(min-width: 900px) and (prefers-reduced-motion: no-preference)',()=>{
+     const tl=gsap.timeline({defaults:{ease:'none'},scrollTrigger:{
+       trigger:ref.current,start:'top top',end:'+=235%',
+       scrub:1.05,pin:true,anticipatePin:1,invalidateOnRefresh:true
+     }});
+     tl.fromTo('.combo-scene',{scale:1.62},{scale:1,duration:4.9,ease:'power2.inOut'},0);
+     flightPaths.forEach((item,i)=>{
+       const start=.38+i*.40;
+       const el=ref.current?.querySelector<HTMLElement>('.hero-'+item.name);
+       if(!el)return;
+       const from=()=>takeoff(el,item.side);
+       tl.fromTo(el,
+         {x:()=>from().x,y:()=>from().y,rotation:item.rotation,scale:.54,autoAlpha:0,filter:'blur(16px)'},
+         {x:0,y:0,rotation:0,scale:1,autoAlpha:1,filter:'blur(0px)',duration:.97,ease:'power3.out',immediateRender:true},
+         start);
+     });
+     tl.fromTo('.combo-seal',{y:20,autoAlpha:0},{y:0,autoAlpha:1,duration:.5},3.4);
+     tl.fromTo('.hero-progress-fill',{scaleX:0},{scaleX:1,duration:5.05,ease:'none'},0);
+   });
+   mm.add('(max-width: 899px) and (prefers-reduced-motion: no-preference)',()=>{
+     const tl=gsap.timeline({defaults:{ease:'none'},scrollTrigger:{
+       trigger:ref.current,start:'top top',end:'bottom 20%',scrub:.65,invalidateOnRefresh:true
+     }});
+     tl.fromTo('.combo-scene',{scale:1.31},{scale:1,duration:4.15,ease:'power2.inOut'},0);
+     flightPaths.forEach((item,i)=>{
+       const el=ref.current?.querySelector<HTMLElement>('.hero-'+item.name);
+       if(!el)return;
+       const from=()=>takeoff(el,item.side);
+       tl.fromTo(el,{x:()=>from().x*.8,y:()=>from().y*.8,rotation:item.rotation*.6,scale:.65,autoAlpha:0,filter:'blur(9px)'},
+         {x:0,y:0,rotation:0,scale:1,autoAlpha:1,filter:'blur(0px)',duration:.7,ease:'power3.out',immediateRender:true},
+         .25+i*.31);
+     });
+     tl.fromTo('.combo-seal',{autoAlpha:0,y:14},{autoAlpha:1,y:0,duration:.4},3);
+     tl.fromTo('.hero-progress-fill',{scaleX:0},{scaleX:1,duration:4.1,ease:'none'},0);
+   });
+   return()=>mm.revert();
+ },{scope:ref});'use client';
+import {useEffect,useRef} from 'react';
+import gsap from 'gsap';
+import {ScrollTrigger} from 'gsap/ScrollTrigger';
+import {useGSAP} from '@gsap/react';
+import Lenis from 'lenis';
+gsap.registerPlugin(ScrollTrigger,useGSAP);
+const photo={hero:'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=1600&q=85',story:'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=1200&q=85',starter:'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1000&q=85',nigiri:'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=1000&q=85',uramaki:'https://images.unsplash.com/photo-1553621042-f6e147245754?w=1000&q=85',dessert:'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=1000&q=85',event:'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=1200&q=85',ingredients:'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=1400&q=85',booking:'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1800&q=85'};
+const dishes=[
+{id:'starter',tag:'01 / ENTRADAS',title:'O primeiro encanto.',body:'Sabores delicados que despertam os sentidos.',img:photo.starter},
+{id:'nigiri',tag:'02 / NIGIRIS',title:'A precisão do gesto.',body:'Cada corte, cada grão, cada detalhe em equilíbrio.',img:photo.nigiri},
+{id:'uramaki',tag:'03 / URAMAKIS',title:'Surpreenda o paladar.',body:'Texturas e combinações preparadas na hora.',img:photo.uramaki},
+{id:'dessert',tag:'04 / SOBREMESAS',title:'Um final inesquecível.',body:'Uma despedida delicada, para guardar na memória.',img:photo.dessert},
+];
+function useSmoothScroll(){
+ useEffect(()=>{if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ const lenis=new Lenis({duration:1.15,smoothWheel:true});lenis.on('scroll',ScrollTrigger.update);
+ const tick=(t:number)=>lenis.raf(t*1000);gsap.ticker.add(tick);
+ const refresh=()=>ScrollTrigger.refresh();window.addEventListener('load',refresh);
+ document.fonts?.ready.then(refresh).catch(()=>{});
+ return()=>{gsap.ticker.remove(tick);lenis.destroy();window.removeEventListener('load',refresh)}},[]);
+}
+function Split({id,image,number,eyebrow,title,body,reverse=false}:{id:string,image:string,number:string,eyebrow:string,title:string,body:string,reverse?:boolean}){
+ const ref=useRef<HTMLElement>(null);
+ useGSAP(()=>{const mm=gsap.matchMedia();mm.add('(prefers-reduced-motion: no-preference)',()=>{
+ const tl=gsap.timeline({scrollTrigger:{trigger:ref.current,start:'top 88%',end:'center 43%',scrub:1}});
+ tl.fromTo('.split-photo',{xPercent:-12,yPercent:15,clipPath:'inset(0% 100% 0% 0%)',opacity:.3},{xPercent:0,yPercent:0,clipPath:'inset(0% 0% 0% 0%)',opacity:1,duration:1,ease:'none'},0)
+   .fromTo('.split-text',{xPercent:12,opacity:.25},{xPercent:0,opacity:1,duration:1,ease:'none'},.12)
+   .fromTo('.split-text > *',{y:55,opacity:0},{y:0,opacity:1,stagger:.14,duration:.7,ease:'none'},.35)
+   .fromTo('.image-caption',{y:20,opacity:0},{y:0,opacity:1,duration:.55},.65);
+ });return()=>mm.revert()},{scope:ref});
+ return <section id={id} ref={ref} className={'split '+(reverse?'reverse':'')}><div className="split-photo"><img src={image} alt="" loading="lazy"/><span className="image-caption">MT SUSHI ARTE</span></div><div className="split-text"><span className="eyebrow">{eyebrow}</span><small className="split-number">{number} / 04</small><h2>{title}</h2><p>{body}</p><a className="text-link" href="#reservas">DESCUBRA MAIS ↗</a></div></section>;
 }
 function Hero(){
  const ref=useRef<HTMLElement>(null);
@@ -141,12 +237,12 @@ function Hero(){
  ];
  return <section className="hero hero-assembly hero-png" ref={ref} id="inicio">
    <header className="header">
-     <a className="brand" href="#inicio">花 <span>HANAMI <small>SUSHI EXPERIENCE</small></span></a>
+     <a className="brand" href="#inicio"><img src="/images/mt-sushi-logo.svg" alt="MT Sushi Arte" width={174} height={45}/></a>
      <nav aria-label="Navegação principal"><a href="#historia">História</a><a href="#cardapio">Cardápio</a><a href="#ingredientes">Ingredientes</a><a href="#contato">Contato</a></nav>
      <details className="mobile-nav"><summary aria-label="Abrir navegação">MENU <span aria-hidden="true">☰</span></summary><div className="mobile-nav-links"><a href="#historia">História</a><a href="#cardapio">Cardápio</a><a href="#ingredientes">Ingredientes</a><a href="#reservas">Reservas</a><a href="#contato">Contato</a></div></details><a className="nav-book" href="#reservas">RESERVAR ↗</a>
    </header>
    <div className="hero-copy">
-     <span className="eyebrow">A ARTE DO SUSHI · HANAMI</span>
+     <span className="eyebrow">MT SUSHI ARTE · ARTESANAL</span>
      <h1>Uma experiência<br/>feita de <em>detalhes.</em></h1>
      <p>Uma tábua. Cada ingrediente em seu lugar. Role a página e descubra como nasce o nosso combo.</p>
      <a className="outline-button" href="#cardapio">EXPLORAR O CARDÁPIO ↗</a>
@@ -157,7 +253,7 @@ function Hero(){
         {combo.map(item=><span className={'combo-slot hero-slot-'+item.name} key={item.name} aria-hidden="true">
           <img className={'combo-food hero-'+item.name} src={'/img/hero/'+item.file} alt="" draggable={false}/>
         </span>)}
-        <span className="combo-seal" aria-hidden="true">HANAMI · OMAKASE</span>
+        <span className="combo-seal" aria-hidden="true">MT SUSHI ARTE · COMBO</span>
       </div>
    </div>
    <div className="hero-scroll-indicator" aria-hidden="true"><span>ROLE PARA MONTAR O COMBO</span><div className="hero-progress"><span className="hero-progress-fill"/></div><span>01 / 04</span></div>
@@ -208,6 +304,6 @@ function Booking(){
  gsap.fromTo('.booking-bg',{yPercent:-12},{yPercent:12,scrollTrigger:{trigger:ref.current,start:'top bottom',end:'bottom top',scrub:true}});
  gsap.fromTo('.booking-content > *',{opacity:0,y:80},{opacity:1,y:0,stagger:.2,duration:.8,ease:'power2.out',scrollTrigger:{trigger:ref.current,start:'top 76%',end:'center 58%',scrub:1}});
  });return()=>mm.revert()},{scope:ref});
- return <section ref={ref} id="reservas" className="booking"><div className="booking-band"><img className="booking-bg" src={photo.booking} alt="" loading="lazy"/><div className="booking-content"><span className="eyebrow">SEU LUGAR À MESA</span><h2>Uma experiência<br/><em>para lembrar.</em></h2><p>Descubra o prazer de viver a gastronomia japonesa com todos os sentidos.</p><a className="outline-button" href="#contato">SOLICITAR RESERVA ↗</a></div></div><footer id="contato" className="footer"><div><a href="#inicio" className="brand">花 <span>HANAMI</span></a><p>Gastronomia japonesa, tempo e intenção.</p></div><div><strong>NAVEGUE</strong><a href="#historia">Nossa história</a><a href="#cardapio">Cardápio</a><a href="#ingredientes">Ingredientes</a></div><div><strong>CONTATO</strong><p>Endereço e contato a definir pelo restaurante.</p></div><div><strong>REDES</strong><p>Instagram e redes sociais a definir.</p><small>© {new Date().getFullYear()} Hanami Sushi</small></div></footer></section>;
+ return <section ref={ref} id="reservas" className="booking"><div className="booking-band"><img className="booking-bg" src={photo.booking} alt="" loading="lazy"/><div className="booking-content"><span className="eyebrow">SEU LUGAR À MESA</span><h2>Uma experiência<br/><em>para lembrar.</em></h2><p>Descubra o prazer de viver a gastronomia japonesa com todos os sentidos.</p><a className="outline-button" href="#contato">SOLICITAR RESERVA ↗</a></div></div><footer id="contato" className="footer"><div><a href="#inicio" className="brand"><img src="/images/mt-sushi-logo.svg" alt="MT Sushi Arte" width={172} height={44}/></a><p>Gastronomia japonesa, tempo e intenção.</p></div><div><strong>NAVEGUE</strong><a href="#historia">Nossa história</a><a href="#cardapio">Cardápio</a><a href="#ingredientes">Ingredientes</a></div><div><strong>CONTATO</strong><p>Endereço e contato a definir pelo restaurante.</p></div><div><strong>REDES</strong><p>Instagram e redes sociais a definir.</p><small>© {new Date().getFullYear()} MT Sushi Arte</small></div></footer></section>;
 }
-export default function Home(){useSmoothScroll();return <main><Hero/><Split id="historia" image={photo.story} number="01" eyebrow="A ESSÊNCIA POR TRÁS DE CADA PEÇA" title="Uma história contada em sabores." body="Mais do que preparar sushi, cultivamos o encontro entre tradição e criatividade. Cada escolha nasce do respeito aos ingredientes e da dedicação ao gesto."/><section className="quote"><span className="eyebrow">MAIS DO QUE UMA REFEIÇÃO</span><p>“A verdadeira arte revela-se nos <em>pequenos detalhes.</em>”</p><span aria-hidden="true">花</span></section><Menu/><Split id="eventos" image={photo.event} number="03" eyebrow="MOMENTOS QUE PERMANECEM" title="Encontros que viram memórias." body="Uma noite especial merece sabores extraordinários. Compartilhe a experiência de estar à mesa e descubra a beleza dos rituais japoneses." reverse/><Ingredients/><Booking/></main>}
+export default function Home(){useSmoothScroll();return <main><Hero/><Split id="historia" image={photo.story} number="01" eyebrow="A ESSÊNCIA POR TRÁS DE CADA PEÇA" title="Uma história contada em sabores." body="Mais do que preparar sushi, cultivamos o encontro entre tradição e criatividade. Cada escolha nasce do respeito aos ingredientes e da dedicação ao gesto."/><section className="quote"><span className="eyebrow">MAIS DO QUE UMA REFEIÇÃO</span><p>“A verdadeira arte revela-se nos <em>pequenos detalhes.</em>”</p><span aria-hidden="true"></span></section><Menu/><Split id="eventos" image={photo.event} number="03" eyebrow="MOMENTOS QUE PERMANECEM" title="Encontros que viram memórias." body="Uma noite especial merece sabores extraordinários. Compartilhe a experiência de estar à mesa e descubra a beleza dos rituais japoneses." reverse/><Ingredients/><Booking/></main>}

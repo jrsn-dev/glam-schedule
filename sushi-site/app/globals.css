@@ -239,3 +239,33 @@ html,body{max-width:100%;overflow-x:clip}
 @media(prefers-reduced-motion:reduce){
  .hero-png .combo-scene{transform:none!important}
 }
+
+/* MT Sushi Arte: original brand colors and typography from mtsushi. */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Roboto:wght@400;500;600;700;800&display=swap');
+:root{--bg:#0b0b0c;--fg:#ededea;--muted:#aaa9aa;--accent:#e5291d;--line:rgba(255,255,255,.08)}
+body{background:#0b0b0c;font-family: 'Noto Sans',sans-serif}
+h1,h2,h3,.quote p{font-family:Roboto,sans-serif;font-weight:800;letter-spacing:-.025em}
+.hero.hero-png,.booking,.hero-assembly{background:#080809}
+.menu,.ingredients{background:#0f0f10}
+.hero-png .brand,.footer .brand{display:inline-flex;align-items:center;justify-content:flex-start;line-height:1;flex:none}
+.hero-png .brand img{display:block;width:clamp(130px,13vw,185px);height:auto;max-height:57px;object-fit:contain}
+.footer .brand img{width:190px;height:auto;object-fit:contain}
+.eyebrow,.text-link,.footer strong,h1 em,h2 em,.quote em{color:#e5291d}
+.hero-png .hero-copy .eyebrow{color:#e5291d}
+.hero-png .hero-copy h1{font-weight:800;letter-spacing:-.03em}
+.hero-png .hero-copy h1 em{color:#e5291d}
+.outline-button{border-color:#e5291d;background:#e5291d;color:#fff;transition:background .32s ease,transform .4s cubic-bezier(.22,1,.36,1)}
+.outline-button:hover{background:#bc1713;color:#fff;transform:translateY(-3px)}
+.hero-png .hero-progress-fill{background:#e5291d}
+.nav-book{border-bottom-color:#e5291d}
+.hero-png .combo-scene{transform-origin:56% 50%}
+.hero-png .combo-slot .combo-food{will-change:transform,opacity,filter;backface-visibility:hidden}
+.hero-png .combo-stage{overflow:visible}
+.hero.hero-png{overflow:hidden}
+.split-text{background:#ededea}
+.split-text .eyebrow{color:#d4141c}
+.mobile-nav-links a:hover,.header nav a:hover{color:#e5291d}
+:focus-visible{outline-color:#e5291d}
+@media(max-width:899px){.hero-png .brand img{width:138px;max-height:45px}}
+@media(max-width:390px){.hero-png .brand img{width:116px}}
+@media(prefers-reduced-motion:reduce){.hero-png .combo-slot .combo-food{filter:none!important}}
