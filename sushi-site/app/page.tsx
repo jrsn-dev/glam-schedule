@@ -36,52 +36,58 @@ function Hero(){
  useGSAP(()=>{
    const mm=gsap.matchMedia();
    mm.add('(min-width: 900px) and (prefers-reduced-motion: no-preference)',()=>{
+     // Prancha escura visível desde o início. O scroll só monta os ingredientes.
      const tl=gsap.timeline({
        defaults:{ease:'power2.out'},
-       scrollTrigger:{trigger:ref.current,start:'top top',end:'+=210%',pin:true,scrub:1.15,anticipatePin:1,invalidateOnRefresh:true}
+       scrollTrigger:{trigger:ref.current,start:'top top',end:'+=250%',pin:true,scrub:1.4,anticipatePin:1,invalidateOnRefresh:true}
      });
-     // A tábua aproxima-se primeiro; cada ingrediente encontra seu lugar na sequência.
-     tl.fromTo('.combo-platter',{opacity:0,scale:.64,rotate:-14,y:170},{opacity:1,scale:1,rotate:0,y:0,duration:1.0,ease:'power3.out'},0)
-       .fromTo('.combo-glow',{opacity:0,scale:.6},{opacity:.65,scale:1,duration:1.2},0.15);
-     const routes=[
-       {x:-510,y:-280,r:-65},{x:460,y:-300,r:54},{x:-560,y:95,r:-48},
-       {x:510,y:160,r:72},{x:-100,y:470,r:36},{x:230,y:490,r:-35},
+     const moves=[
+       {selector:'.hero-salmon-a',from:{x:-400,y:-260,rotate:-22,scale:.58}},
+       {selector:'.hero-tuna-a',from:{x:460,y:-260,rotate:28,scale:.53}},
+       {selector:'.hero-uramaki',from:{x:-430,y:220,rotate:-32,scale:.5}},
+       {selector:'.hero-salmon-b',from:{x:410,y:290,rotate:25,scale:.52}},
+       {selector:'.hero-tuna-b',from:{x:160,y:410,rotate:35,scale:.54}},
+       {selector:'.hero-wasabi',from:{x:280,y:260,rotate:40,scale:.42}},
+       {selector:'.hero-ginger',from:{x:-330,y:300,rotate:-42,scale:.42}},
+       {selector:'.hero-shoyu',from:{x:370,y:-180,rotate:35,scale:.64}},
+       {selector:'.hero-hashi',from:{x:370,y:-250,rotate:50,scale:.83}}
      ];
-     routes.forEach((p,i)=>{
-       tl.fromTo('.combo-piece-'+i,
-         {x:p.x,y:p.y,rotate:p.r,scale:.45,opacity:0},
-         {x:0,y:0,rotate:i%2===0?-8:8,scale:1,opacity:1,duration:.9,ease:'power3.out'},.45+i*.21);
+     moves.forEach((item,i)=>{
+       tl.fromTo(item.selector,{...item.from,opacity:0},
+        {x:0,y:0,rotate:0,scale:1,opacity:1,duration:.95,ease:'power3.out',immediateRender:true},i*.36);
      });
-     tl.fromTo('.combo-wasabi',{x:250,y:240,rotate:65,scale:.5,opacity:0},{x:0,y:0,rotate:0,scale:1,opacity:1,duration:.85},1.55)
-       .fromTo('.combo-ginger',{x:-280,y:230,rotate:-45,scale:.5,opacity:0},{x:0,y:0,rotate:0,scale:1,opacity:1,duration:.85},1.72)
-       .fromTo('.combo-hashi',{x:480,y:-280,rotate:65,opacity:0},{x:0,y:0,rotate:-23,opacity:1,duration:1.1},1.9)
-       .fromTo('.combo-seal',{y:35,opacity:0},{y:0,opacity:1,duration:.7},2.15)
-       .to('.hero-progress-fill',{scaleX:1,duration:2.5,ease:'none'},0)
-       .to('.hero-copy',{y:-35,opacity:.72,duration:1.0},1.7);
-     return()=>{tl.scrollTrigger?.kill();tl.kill()};
+     tl.fromTo('.combo-seal',{y:25,opacity:0},{y:0,opacity:1,duration:.6},2.9)
+       .to('.hero-progress-fill',{scaleX:1,duration:4,ease:'none'},0)
+       .to('.hero-copy',{y:-20,opacity:.76,duration:1},3.05);
    });
    mm.add('(max-width: 899px) and (prefers-reduced-motion: no-preference)',()=>{
-     gsap.fromTo('.combo-platter, .combo-piece, .combo-hashi, .combo-wasabi, .combo-ginger',
-       {y:35,opacity:0},{y:0,opacity:1,duration:.85,stagger:.1,ease:'power2.out',delay:.15});
+     const tl=gsap.timeline({scrollTrigger:{trigger:'.combo-stage',start:'top 90%',end:'bottom 35%',scrub:.8}});
+     tl.fromTo('.combo-food',{y:80,opacity:0,scale:.74},{y:0,opacity:1,scale:1,duration:.7,stagger:.18,ease:'power2.out'});
    });
    return()=>mm.revert();
  },{scope:ref});
- return <section className="hero hero-assembly" ref={ref} id="inicio">
+ const combo=[
+  {name:'salmon-a',file:'salmon.png',label:'Nigiris de salmão'},
+  {name:'tuna-a',file:'tuna.png',label:'Nigiris de atum'},
+  {name:'uramaki',file:'uramaki.png',label:'Uramakis variados'},
+  {name:'salmon-b',file:'salmon.png',label:''},
+  {name:'tuna-b',file:'tuna.png',label:''},
+  {name:'wasabi',file:'wasabi.png',label:'Wasabi'},
+  {name:'ginger',file:'ginger.png',label:'Gengibre em conserva'},
+  {name:'shoyu',file:'soy-sauce.png',label:'Pires de shoyu'},
+  {name:'hashi',file:'chopsticks.png',label:'Hashis'}
+ ];
+ return <section className="hero hero-assembly hero-png" ref={ref} id="inicio">
    <header className="header"><a className="brand" href="#inicio">花 <span>HANAMI <small>SUSHI EXPERIENCE</small></span></a><nav aria-label="Navegação principal"><a href="#historia">Nossa história</a><a href="#cardapio">Cardápio</a><a href="#ingredientes">Ingredientes</a><a href="#contato">Contato</a></nav><a className="nav-book" href="#reservas">RESERVAR ↗</a></header>
    <span className="hero-kanji" aria-hidden="true">寿司</span>
-   <div className="hero-copy"><span className="eyebrow">A ARTE DO SUSHI</span><h1>Uma obra<br/>montada em <em>detalhes.</em></h1><p>Role para acompanhar cada peça encontrar o seu lugar. Uma experiência preparada com tempo, precisão e cuidado.</p><a className="outline-button" href="#cardapio">DESCUBRA NOSSO CARDÁPIO ↗</a></div>
-   <div className="combo-stage" role="img" aria-label="Combo japonês sendo montado com seis peças de sushi, wasabi, gengibre e hashi">
-     <div className="combo-glow" aria-hidden="true"/>
-     <div className="combo-platter" aria-hidden="true"><div className="combo-grain"/><div className="combo-platter-center"/></div>
-     {[
-       {kind:'salmon',top:'23%',left:'20%'},{kind:'tuna',top:'18%',left:'49%'},{kind:'uramaki',top:'45%',left:'15%'},
-       {kind:'salmon',top:'43%',left:'57%'},{kind:'uramaki',top:'67%',left:'29%'},{kind:'tuna',top:'64%',left:'60%'}
-     ].map((piece,i)=><div key={i} className={'combo-piece combo-piece-'+i+' '+piece.kind} style={{top:piece.top,left:piece.left}}>
-        <div className="sushi-nori"><div className="sushi-rice"><div className="sushi-filling"/></div></div>
-       </div>)}
-     <span className="combo-wasabi" aria-hidden="true"/><span className="combo-ginger" aria-hidden="true"/>
-     <span className="combo-hashi" aria-hidden="true"><i/><i/></span>
-     <span className="combo-seal">OMAKASE • HANAMI</span>
+   <div className="hero-copy"><span className="eyebrow">A ARTE DO SUSHI</span><h1>Uma obra<br/>montada em <em>detalhes.</em></h1><p>Uma tábua. Cada ingrediente em seu lugar. Role para acompanhar o combo ganhar vida.</p><a className="outline-button" href="#cardapio">EXPLORE O CARDÁPIO ↗</a></div>
+   <div className="combo-stage" role="group" aria-label="Montagem cinematográfica de um combo de sushi sobre tábua escura">
+     <div className="combo-board-fallback" aria-hidden="true"/>
+     <img className="combo-board-img" src="/img/hero/board.png" alt="Tábua premium de madeira escura vazia" fetchPriority="high"/>
+     {combo.map(item=><img key={item.name}
+       className={'combo-food hero-'+item.name}
+       src={'/img/hero/'+item.file} alt={item.label} loading="eager"/>)}
+     <span className="combo-seal">HANAMI • OMAKASE</span>
    </div>
    <span className="hero-side">JAPANESE DINING · EST. 2026</span>
    <div className="hero-progress"><span className="hero-progress-fill"/></div>
