@@ -42,3 +42,41 @@
  .combo-stage{transform:translateY(-47%)}.combo-hashi{transform:rotate(-23deg)}
  .hero-progress-fill{transform:scaleX(1)}
 }
+
+/* PNG transparentes para a montagem realista do combo.
+   Todos os itens são imagens independentes, posicionadas sobre a tábua. */
+.hero-png .combo-stage{width:min(53vw,790px);right:1.5vw;aspect-ratio:1.44;top:53%;transform:translateY(-50%)}
+.hero-png .combo-board-fallback{position:absolute;inset:21% 5% 6%;border-radius:12px;background:repeating-linear-gradient(4deg,#1a110d 0 7px,#2d1a11 8px 12px,#20150f 13px 23px);box-shadow:inset 0 0 0 9px #302017,0 22px 55px #0008}
+.hero-png .combo-board-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:1}
+.hero-png .combo-food{position:absolute;z-index:3;width:23%;height:34%;object-fit:contain;transform-origin:50% 55%;filter:drop-shadow(2px 10px 9px rgba(0,0,0,.36))}
+.hero-png .hero-salmon-a{left:17%;top:28%;width:27%;height:35%}
+.hero-png .hero-tuna-a{left:47%;top:26%;width:25%;height:32%}
+.hero-png .hero-uramaki{left:30%;top:48%;width:33%;height:35%}
+.hero-png .hero-salmon-b{left:62%;top:46%;width:24%;height:30%}
+.hero-png .hero-tuna-b{left:10%;top:49%;width:22%;height:28%}
+.hero-png .hero-wasabi{left:78%;top:60%;width:9%;height:17%}
+.hero-png .hero-ginger{left:15%;top:72%;width:11%;height:15%}
+.hero-png .hero-shoyu{right:2%;top:4%;width:20%;height:27%;z-index:4}
+.hero-png .hero-hashi{right:-7%;top:-8%;width:32%;height:48%;z-index:5;transform:rotate(0deg)}
+.hero-png .combo-seal{bottom:8%;right:18%;z-index:6;color:#d7bda7;text-shadow:0 2px 7px #000}
+.hero-png .combo-stage .combo-platter,.hero-png .combo-stage .combo-piece{display:none}
+.hero-png .hero-copy{max-width:570px;z-index:4}
+@media (max-width:899px){
+ .hero-png{min-height:790px;padding-bottom:420px}
+ .hero-png .combo-stage{width:min(98vw,650px);right:0;bottom:5%;top:auto;transform:none}
+ .hero-png .hero-copy{position:relative;z-index:5}
+}
+@media (max-width:520px){
+ .hero-png{min-height:760px;padding-bottom:370px}
+ .hero-png .combo-stage{width:103vw;right:-2vw;bottom:5%}
+ .hero-png .combo-seal{font-size:6px}
+ .hero-png .combo-food{filter:drop-shadow(1px 5px 4px #0007)}
+}
+@media(prefers-reduced-motion:reduce){
+ .hero-png .combo-food{opacity:1!important;transform:none!important}
+ .hero-png .combo-board-img{opacity:1!important}
+ .hero-png .combo-stage{transform:translateY(-50%)!important}
+}
+@media(prefers-reduced-motion:reduce) and (max-width:899px){
+ .hero-png .combo-stage{transform:none!important}
+}
